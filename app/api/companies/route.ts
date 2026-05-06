@@ -18,5 +18,5 @@ export async function POST(request: Request) {
   })
 
   await newCompany.save()
-  return Response.json(newCompany, { status: 201 })
+  return Response.json(newCompany)
 }

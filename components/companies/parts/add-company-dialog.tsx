@@ -68,7 +68,7 @@ export function AddCompanyDialog({
           <DialogDescription>Įveskite kompanijos pavadinimą.</DialogDescription>
         </DialogHeader>
 
-        <form id="add-airport-form" onSubmit={form.handleSubmit(onSubmit)}>
+        <form id="add-company-form" onSubmit={form.handleSubmit(onSubmit)}>
           <div className="grid gap-4 py-4">
             <Controller
               name="code"
@@ -96,7 +96,7 @@ export function AddCompanyDialog({
           <Button variant="outline" onClick={onClose} type="button">
             Atšaukti
           </Button>
-          <Button type="submit" form="add-airport-form">
+          <Button type="submit" form="add-company-form">
             Pridėti
           </Button>
         </DialogFooter>
