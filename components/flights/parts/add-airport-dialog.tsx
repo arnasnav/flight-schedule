@@ -13,24 +13,19 @@ import {
   DialogFooter,
   DialogDescription,
 } from "@/components/ui/dialog"
+
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Field, FieldLabel, FieldError } from "@/components/ui/field"
 import { toast } from "sonner"
 
-type Props = {
-  open: boolean
+type IProps = {
   onClose: () => void
   onConfirm: (name: string) => void
   existingNames: string[]
 }
 
-export function AddAirportDialog({
-  open,
-  onClose,
-  onConfirm,
-  existingNames = [],
-}: Props) {
+export function AddAirportDialog(props: IProps) {
   const formSchema = z.object({
     name: z
       .string()
@@ -39,10 +34,12 @@ export function AddAirportDialog({
       .max(50, "Pavadinimas per ilgas.")
       .refine(
         (val) =>
-          !existingNames.some(
-            (name) => name.toLowerCase() === val.trim().toLowerCase()
+          !props.existingNames.some(
+            (name) => name.toLowerCase() === val.toLowerCase()
           ),
-        { message: "Oro uostas tokiu pavadinimu jau egzistuoja." }
+        {
+          message: "Oro uostas tokiu pavadinimu jau egzistuoja.",
+        }
       ),
   })
 
@@ -53,28 +50,27 @@ export function AddAirportDialog({
     },
   })
 
-  function onSubmit(data: z.infer<typeof formSchema>) {
-    onConfirm(data.name)
-    toast.success(`Oro uostas sėkmingai pridėtas`)
+  const handleSubmit = (data: z.infer<typeof formSchema>) => {
+    props.onConfirm(data.name)
+    toast.success("Oro uostas sėkmingai pridėtas")
     form.reset()
-    onClose()
+    props.onClose()
   }
 
   React.useEffect(() => {
-    if (!open) {
-      form.reset()
-    }
-  }, [open, form])
+    form.reset()
+  }, [form])
 
   return (
-    <Dialog open={open} onOpenChange={onClose}>
+    <Dialog open={true} onOpenChange={props.onClose}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Pridėti oro uostą</DialogTitle>
+
           <DialogDescription>Įveskite oro uosto pavadinimą.</DialogDescription>
         </DialogHeader>
 
-        <form id="add-airport-form" onSubmit={form.handleSubmit(onSubmit)}>
+        <form id="add-airport-form" onSubmit={form.handleSubmit(handleSubmit)}>
           <div className="grid gap-4 py-4">
             <Controller
               name="name"
@@ -82,6 +78,7 @@ export function AddAirportDialog({
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor="airport-name">Pavadinimas</FieldLabel>
+
                   <Input
                     {...field}
                     id="airport-name"
@@ -89,7 +86,8 @@ export function AddAirportDialog({
                     aria-invalid={fieldState.invalid}
                     autoComplete="off"
                   />
-                  {fieldState.invalid && (
+
+                  {fieldState.error && (
                     <FieldError errors={[fieldState.error]} />
                   )}
                 </Field>
@@ -99,9 +97,10 @@ export function AddAirportDialog({
         </form>
 
         <DialogFooter>
-          <Button variant="outline" onClick={onClose} type="button">
+          <Button variant="outline" onClick={props.onClose} type="button">
             Atšaukti
           </Button>
+
           <Button type="submit" form="add-airport-form">
             Pridėti
           </Button>
