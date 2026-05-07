@@ -13,7 +13,7 @@ export async function POST(request: Request) {
   await connectMongoose()
   const body = await request.json()
 
-  const newSchedule = new Schedule({
+  const newSchedule = await Schedule.create({
     airportId: body.airportId,
     companyId: body.companyId,
     flightNumber: body.flightNumber,
@@ -23,6 +23,5 @@ export async function POST(request: Request) {
     hasArrived: body.hasArrived ?? false,
   })
 
-  await newSchedule.save()
   return NextResponse.json(newSchedule)
 }

@@ -13,10 +13,9 @@ export async function POST(request: Request) {
   await connectMongoose()
   const body = await request.json()
 
-  const newCompany = new Company({
-    code: body.code || body.name,
+  const newCompany = await Company.create({
+    name: body.name,
   })
 
-  await newCompany.save()
   return Response.json(newCompany)
 }

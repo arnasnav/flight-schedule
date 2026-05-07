@@ -13,8 +13,7 @@ export async function POST(request: Request) {
   await connectMongoose()
   const body = await request.json()
 
-  const newAirport = new Airport(body)
-  await newAirport.save()
+  const newAirport = await Airport.create(body)
 
   return NextResponse.json(newAirport)
 }
