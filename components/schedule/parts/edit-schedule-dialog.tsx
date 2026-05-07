@@ -1,4 +1,4 @@
-edit: "use client"
+"use client"
 
 import * as React from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -142,6 +142,17 @@ export function EditScheduleDialog({
     }
   }, [schedule, open, form])
 
+  React.useEffect(() => {
+    if (!open) form.reset()
+  }, [open, form])
+
+  function onSubmit(data: z.infer<typeof formSchema>) {
+    onConfirm(data)
+    toast.success(`Skrydžio informacija sėkmingai atnaujinta`)
+    form.reset()
+    onClose()
+  }
+
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="max-w-2xl">
@@ -154,7 +165,7 @@ export function EditScheduleDialog({
 
         <form
           id="edit-schedule-form"
-          onSubmit={form.handleSubmit(onConfirm)}
+          onSubmit={form.handleSubmit(onSubmit)}
           className="space-y-4"
         >
           <div className="grid grid-cols-2 gap-4">
@@ -233,7 +244,7 @@ export function EditScheduleDialog({
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel>Reiso numeris</FieldLabel>
-                  <Input {...field} />
+                  <Input {...field} id="flight-number" />
                   <FieldError errors={[fieldState.error]} />
                 </Field>
               )}
@@ -268,13 +279,16 @@ export function EditScheduleDialog({
             name="hasArrived"
             control={form.control}
             render={({ field }) => (
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-2 py-2">
                 <Checkbox
                   id="editHasArrived"
                   checked={field.value}
                   onCheckedChange={field.onChange}
                 />
-                <label htmlFor="editHasArrived" className="text-sm font-medium">
+                <label
+                  htmlFor="editHasArrived"
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
                   Lėktuvas jau atvyko
                 </label>
               </div>
