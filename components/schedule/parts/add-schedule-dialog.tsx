@@ -1,6 +1,5 @@
-add: "use client"
+"use client"
 
-import * as React from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Controller, useForm } from "react-hook-form"
 import * as z from "zod"
@@ -14,6 +13,7 @@ import {
   DialogFooter,
   DialogDescription,
 } from "@/components/ui/dialog"
+
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Field, FieldLabel, FieldError } from "@/components/ui/field"
@@ -31,8 +31,7 @@ import { ICompany } from "@/models/company-model"
 import { ISchedule } from "@/models/schedule-model"
 import { toast } from "sonner"
 
-type Props = {
-  open: boolean
+type IProps = {
   onClose: () => void
   onConfirm: (data: any) => void
   airports: IAirport[]
@@ -40,14 +39,7 @@ type Props = {
   existingSchedules: ISchedule[]
 }
 
-export function AddScheduleDialog({
-  open,
-  onClose,
-  onConfirm,
-  airports,
-  companies,
-  existingSchedules,
-}: Props) {
+export function AddScheduleDialog(props: IProps) {
   const formSchema = z
     .object({
       airportId: z.string().min(1, "Pasirinkite išvykimo oro uostą"),
@@ -58,18 +50,18 @@ export function AddScheduleDialog({
         .min(1, "Įveskite reiso numerį")
         .refine(
           (val) =>
-            !existingSchedules.some(
+            !props.existingSchedules.some(
               (s) => s.flightNumber.toLowerCase() === val.trim().toLowerCase()
             ),
           { message: "Šis reiso numeris jau egzistuoja" }
         ),
-      departureTime: z.string().min(1, "Pasirinkite išvykimo laiką"),
-      arrivalAirportId: z.string().min(1, "Pasirinkite atvykimo oro uostą"),
-      arrivalTime: z.string().min(1, "Pasirinkite atvykimo laiką"),
+      departureTime: z.string().min(1),
+      arrivalAirportId: z.string().min(1),
+      arrivalTime: z.string().min(1),
       hasArrived: z.boolean(),
     })
     .refine((data) => data.airportId !== data.arrivalAirportId, {
-      message: "Išvykimo ir atvykimo oro uostai negali sutapti",
+      message: "Oro uostai negali sutapti",
       path: ["arrivalAirportId"],
     })
     .refine(
@@ -79,33 +71,35 @@ export function AddScheduleDialog({
         return isBefore(dep, arr)
       },
       {
-        message: "Išvykimo laikas turi būti ankstesnis už atvykimo",
+        message: "Išvykimas turi būti prieš atvykimą",
         path: ["arrivalTime"],
       }
     )
     .refine(
       (data) => {
         const newDep = parseISO(data.departureTime)
-        const sameAirportFlights = existingSchedules.filter(
+
+        const sameAirportFlights = props.existingSchedules.filter(
           (s) => s.airportId === data.airportId
         )
 
         const sameTimeFlights = sameAirportFlights.filter(
           (s) => parseISO(s.departureTime).getTime() === newDep.getTime()
         )
+
         if (sameTimeFlights.length >= 2) return false
 
         const tooClose = sameAirportFlights.some((s) => {
-          const existingDep = parseISO(s.departureTime)
-          const diff = Math.abs(differenceInMinutes(existingDep, newDep))
+          const diff = Math.abs(
+            differenceInMinutes(parseISO(s.departureTime), newDep)
+          )
           return diff > 0 && diff < 20
         })
 
         return !tooClose
       },
       {
-        message:
-          "Viršytas limitas (max 2 skrydžiai vienu metu) arba tarpas tarp skrydžių mažesnis nei 20 min.",
+        message: "Per daug skrydžių arba per mažas tarpas (<20 min)",
         path: ["departureTime"],
       }
     )
@@ -124,22 +118,18 @@ export function AddScheduleDialog({
   })
 
   function onSubmit(data: z.infer<typeof formSchema>) {
-    onConfirm(data)
-    toast.success(`Skrydis sėkmingai pridėtas`)
+    props.onConfirm(data)
+    toast.success("Skrydis sėkmingai pridėtas")
     form.reset()
-    onClose()
+    props.onClose()
   }
 
-  React.useEffect(() => {
-    if (!open) form.reset()
-  }, [open, form])
-
   return (
-    <Dialog open={open} onOpenChange={onClose}>
+    <Dialog open={true} onOpenChange={props.onClose}>
       <DialogContent className="max-w-2xl">
         <DialogHeader>
           <DialogTitle>Pridėti skrydį</DialogTitle>
-          <DialogDescription>Įveskite skrydžio informaciją.</DialogDescription>
+          <DialogDescription>Įveskite skrydžio informaciją</DialogDescription>
         </DialogHeader>
 
         <form
@@ -154,12 +144,12 @@ export function AddScheduleDialog({
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel>Išvykimo oro uostas</FieldLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
+                  <Select value={field.value} onValueChange={field.onChange}>
                     <SelectTrigger>
                       <SelectValue placeholder="Pasirinkite" />
                     </SelectTrigger>
                     <SelectContent>
-                      {airports.map((a) => (
+                      {props.airports.map((a) => (
                         <SelectItem key={a.id} value={a.id!}>
                           {a.name}
                         </SelectItem>
@@ -177,12 +167,12 @@ export function AddScheduleDialog({
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel>Atvykimo oro uostas</FieldLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
+                  <Select value={field.value} onValueChange={field.onChange}>
                     <SelectTrigger>
                       <SelectValue placeholder="Pasirinkite" />
                     </SelectTrigger>
                     <SelectContent>
-                      {airports.map((a) => (
+                      {props.airports.map((a) => (
                         <SelectItem key={a.id} value={a.id!}>
                           {a.name}
                         </SelectItem>
@@ -200,14 +190,14 @@ export function AddScheduleDialog({
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel>Kompanija</FieldLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
+                  <Select value={field.value} onValueChange={field.onChange}>
                     <SelectTrigger>
                       <SelectValue placeholder="Pasirinkite" />
                     </SelectTrigger>
                     <SelectContent>
-                      {companies.map((c) => (
+                      {props.companies.map((c) => (
                         <SelectItem key={c.id} value={c.id!}>
-                          {c.code}
+                          {c.name}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -223,7 +213,7 @@ export function AddScheduleDialog({
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel>Reiso numeris</FieldLabel>
-                  <Input {...field} placeholder="SK123" />
+                  <Input {...field} />
                   <FieldError errors={[fieldState.error]} />
                 </Field>
               )}
@@ -260,11 +250,10 @@ export function AddScheduleDialog({
             render={({ field }) => (
               <div className="flex items-center space-x-2">
                 <Checkbox
-                  id="hasArrived"
                   checked={field.value}
                   onCheckedChange={field.onChange}
                 />
-                <label htmlFor="hasArrived" className="text-sm font-medium">
+                <label className="text-sm font-medium">
                   Lėktuvas jau atvyko
                 </label>
               </div>
@@ -273,9 +262,10 @@ export function AddScheduleDialog({
         </form>
 
         <DialogFooter>
-          <Button variant="outline" onClick={onClose} type="button">
+          <Button variant="outline" onClick={props.onClose}>
             Atšaukti
           </Button>
+
           <Button type="submit" form="add-schedule-form">
             Išsaugoti
           </Button>
