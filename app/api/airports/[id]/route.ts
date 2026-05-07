@@ -13,7 +13,7 @@ export async function DELETE(
   return Response.json({ message: "Deleted successfully" })
 }
 
-export async function PATCH(
+export async function PUT(
   request: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
