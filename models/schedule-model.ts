@@ -3,13 +3,13 @@ import { WithStringId } from "./model-t"
 
 export interface ISchedule {
   id?: string
-  airportId: string      // Išvykimo oro uostas
-  companyId: string      // Kompanija
-  flightNumber: string   // Reiso numeris
-  departureTime: string  // Išvykimo laikas
-  arrivalAirportId: string // Atvykimo oro uostas
-  arrivalTime: string    // Atvykimo laikas
-  hasArrived: boolean    // Checkbox statusas
+  airportId: string
+  companyId: string
+  flightNumber: string
+  departureTime: string
+  arrivalAirportId: string
+  arrivalTime: string
+  hasArrived: boolean
 }
 
 type IReturnType = WithStringId<ISchedule>
