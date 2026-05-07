@@ -18,75 +18,75 @@ import { Input } from "@/components/ui/input"
 import { Field, FieldLabel, FieldError } from "@/components/ui/field"
 import { toast } from "sonner"
 
-type Props = {
-  open: boolean
+type IProps = {
   onClose: () => void
-  onConfirm: (code: string) => void
+  onConfirm: (name: string) => void
   existingNames: string[]
 }
 
-export function AddCompanyDialog({
-  open,
-  onClose,
-  onConfirm,
-  existingNames = [],
-}: Props) {
+export function AddCompanyDialog(props: IProps) {
   const formSchema = z.object({
-    code: z
+    name: z
       .string()
       .trim()
       .min(3, "Pavadinimas turi būti bent 3 simbolių ilgio.")
       .max(25, "Pavadinimas per ilgas.")
       .refine(
         (val) =>
-          !existingNames.some(
-            (code) => code.toLowerCase() === val.trim().toLowerCase()
+          !props.existingNames.some(
+            (name) => name.toLowerCase() === val.toLowerCase()
           ),
-        { message: "Kompanija tokiu pavadinimu jau egzistuoja." }
+        {
+          message: "Kompanija tokiu pavadinimu jau egzistuoja.",
+        }
       ),
   })
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      code: "",
+      name: "",
     },
   })
 
   function onSubmit(data: z.infer<typeof formSchema>) {
-    onConfirm(data.code)
-    toast.success(`Kompanija sėkmingai pridėta`)
+    props.onConfirm(data.name)
+    toast.success("Kompanija sėkmingai pridėta")
     form.reset()
-    onClose()
+    props.onClose()
   }
 
   React.useEffect(() => {
-    if (!open) form.reset()
-  }, [open, form])
+    form.reset()
+  }, [form])
 
   return (
-    <Dialog open={open} onOpenChange={onClose}>
+    <Dialog open={true} onOpenChange={props.onClose}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Pridėti naują kompaniją</DialogTitle>
+
           <DialogDescription>Įveskite kompanijos pavadinimą.</DialogDescription>
         </DialogHeader>
 
         <form id="add-company-form" onSubmit={form.handleSubmit(onSubmit)}>
           <div className="grid gap-4 py-4">
             <Controller
-              name="code"
+              name="name"
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="company-code">Pavadinimas</FieldLabel>
+                  <FieldLabel htmlFor="company-name">Pavadinimas</FieldLabel>
+
                   <Input
                     {...field}
-                    id="company-code"
+                    id="company-name"
                     placeholder="Ryanair"
                     aria-invalid={fieldState.invalid}
                     autoComplete="off"
                   />
-                  {fieldState.invalid && (
+
+                  {fieldState.error && (
                     <FieldError errors={[fieldState.error]} />
                   )}
                 </Field>
@@ -96,9 +96,10 @@ export function AddCompanyDialog({
         </form>
 
         <DialogFooter>
-          <Button variant="outline" onClick={onClose} type="button">
+          <Button variant="outline" onClick={props.onClose} type="button">
             Atšaukti
           </Button>
+
           <Button type="submit" form="add-company-form">
             Pridėti
           </Button>
