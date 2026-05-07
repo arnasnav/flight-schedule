@@ -187,7 +187,7 @@ function FieldError({
     }
 
     if (!errors?.length) {
-      return null
+      return undefined
     }
 
     const uniqueErrors = [
@@ -209,7 +209,7 @@ function FieldError({
   }, [children, errors])
 
   if (!content) {
-    return null
+    return undefined
   }
 
   return (
