@@ -5,7 +5,7 @@ import { IAirport } from "@/models/airport-model"
 import { ICompany } from "@/models/company-model"
 import { Button } from "@/components/ui/button"
 
-type Props = {
+type IProps = {
   schedules: ISchedule[]
   airports: IAirport[]
   companies: ICompany[]
@@ -13,14 +13,14 @@ type Props = {
   onDelete: (id: string) => void
 }
 
-export function ScheduleList({
-  schedules,
-  airports,
-  companies,
-  onEdit,
-  onDelete,
-}: Props) {
-  if (schedules.length === 0) {
+export function ScheduleList(props: IProps) {
+  const getCompanyName = (id: string) =>
+    props.companies.find((c) => c.id === id)?.name || "Nenurodyta"
+
+  const getAirportName = (id: string) =>
+    props.airports.find((a) => a.id === id)?.name || "Nenurodyta"
+
+  if (props.schedules.length === 0) {
     return (
       <div className="p-12 text-center text-sm text-muted-foreground">
         Skrydžių nerasta
@@ -42,27 +42,24 @@ export function ScheduleList({
       </thead>
 
       <tbody className="divide-y divide-slate-100">
-        {schedules.map((s) => (
+        {props.schedules.map((s) => (
           <tr key={s.id} className="hover:bg-slate-50/50 transition-colors">
             <td className="px-6 py-4 font-medium text-slate-900">
               {s.flightNumber}
             </td>
 
-            <td className="px-6 py-4">
-              {companies.find((c) => c.id === s.companyId)?.code ||
-                "Nenurodyta"}
-            </td>
+            <td className="px-6 py-4">{getCompanyName(s.companyId)}</td>
 
             <td className="px-6 py-4">
               <div className="flex flex-col">
                 <span className="text-slate-600">
-                  {airports.find((a) => a.id === s.airportId)?.name}
+                  {getAirportName(s.airportId)}
                 </span>
 
                 <span className="text-xs text-slate-400">&rarr;</span>
 
                 <span className="text-slate-600">
-                  {airports.find((a) => a.id === s.arrivalAirportId)?.name}
+                  {getAirportName(s.arrivalAirportId)}
                 </span>
               </div>
             </td>
@@ -89,13 +86,18 @@ export function ScheduleList({
             </td>
 
             <td className="px-6 py-4 text-right space-x-2">
-              <Button variant="outline" size="sm" onClick={() => onEdit(s)}>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => props.onEdit(s)}
+              >
                 Keisti
               </Button>
+
               <Button
                 variant="destructive"
                 size="sm"
-                onClick={() => onDelete(s.id!)}
+                onClick={() => props.onDelete(s.id!)}
               >
                 Ištrinti
               </Button>

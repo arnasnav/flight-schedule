@@ -9,7 +9,7 @@ import { NavLogo } from "@/components/nav/parts/nav-logo"
 
 type IProps = { menu: INav[] }
 
-export function NavPage({ menu }: IProps) {
+export function NavPage(props: IProps) {
   const [isVisible, setIsVisible] = useState(false)
 
   return (
@@ -22,7 +22,7 @@ export function NavPage({ menu }: IProps) {
           onToggle={() => setIsVisible((v) => !v)}
         />
 
-        <NavLinks menu={menu} isVisible={isVisible} />
+        <NavLinks menu={props.menu} isVisible={isVisible} />
       </div>
     </nav>
   )

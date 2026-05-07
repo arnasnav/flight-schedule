@@ -10,22 +10,22 @@ import {
   NavigationMenuLink,
 } from "@/components/ui/navigation-menu"
 
-type Props = {
+type IProps = {
   item: INav
 }
 
-export function NavDropdown({ item }: Props) {
+export function NavDropdown(props: IProps) {
   return (
     <NavigationMenu>
       <NavigationMenuList>
         <NavigationMenuItem>
           <NavigationMenuTrigger className="bg-transparent p-0 text-base font-medium">
-            {item.title}
+            {props.item.title}
           </NavigationMenuTrigger>
 
           <NavigationMenuContent>
             <ul className="grid w-48 gap-1 p-2">
-              {item.children?.map((child) => (
+              {props.item.children?.map((child) => (
                 <li key={child.slug}>
                   <NavigationMenuLink asChild>
                     <Link

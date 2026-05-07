@@ -11,7 +11,11 @@ export const metadata: Metadata = {
   description: "Lėktuvų tvarkaraštis",
 }
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+type IProps = {
+  children: ReactNode
+}
+
+export default function RootLayout(props: IProps) {
   return (
     <html lang="lt">
       <body className="min-h-screen bg-background">
@@ -19,7 +23,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <div className="mx-auto flex min-h-screen w-full max-w-7xl flex-col px-4">
             <Header />
 
-            <main className="flex-1">{children}</main>
+            <main className="flex-1">{props.children}</main>
 
             <Footer />
           </div>

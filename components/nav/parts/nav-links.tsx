@@ -2,16 +2,18 @@ import Link from "next/link"
 import { INav } from "@/types/nav-t"
 import { NavDropdown } from "./nav-dropdown"
 
-type Props = {
+type IProps = {
   menu: INav[]
   isVisible: boolean
 }
 
-export function NavLinks({ menu, isVisible }: Props) {
+export function NavLinks(props: IProps) {
   return (
-    <div className={`w-full md:block md:w-auto ${isVisible ? "" : "hidden"}`}>
+    <div
+      className={`w-full md:block md:w-auto ${props.isVisible ? "" : "hidden"}`}
+    >
       <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 border md:flex-row md:items-center md:space-x-8 md:mt-0 md:border-0 md:bg-white">
-        {menu.map((item) => (
+        {props.menu.map((item) => (
           <li key={item.slug}>
             {item.children?.length ? (
               <NavDropdown item={item} />
