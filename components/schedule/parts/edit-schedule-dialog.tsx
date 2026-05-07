@@ -14,6 +14,7 @@ import {
   DialogFooter,
   DialogDescription,
 } from "@/components/ui/dialog"
+
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Field, FieldLabel, FieldError } from "@/components/ui/field"
@@ -37,9 +38,8 @@ const toDateTimeLocal = (dateStr: string | Date) => {
   return dt.toISOString().slice(0, 16)
 }
 
-type Props = {
-  schedule: ISchedule | null
-  open: boolean
+type IProps = {
+  schedule: ISchedule
   onClose: () => void
   onConfirm: (data: any) => void
   airports: IAirport[]
@@ -47,15 +47,7 @@ type Props = {
   existingSchedules: ISchedule[]
 }
 
-export function EditScheduleDialog({
-  schedule,
-  open,
-  onClose,
-  onConfirm,
-  airports,
-  companies,
-  existingSchedules,
-}: Props) {
+export function EditScheduleDialog(props: IProps) {
   const formSchema = z
     .object({
       airportId: z.string().min(1, "Pasirinkite išvykimo oro uostą"),
@@ -66,10 +58,10 @@ export function EditScheduleDialog({
         .min(1, "Įveskite reiso numerį")
         .refine(
           (val) =>
-            !existingSchedules.some(
+            !props.existingSchedules.some(
               (s) =>
-                s.id !== schedule?.id &&
-                s.flightNumber.toLowerCase() === val.trim().toLowerCase()
+                s.id !== props.schedule.id &&
+                s.flightNumber.toLowerCase() === val.toLowerCase()
             ),
           { message: "Šis reiso numeris jau egzistuoja" }
         ),
@@ -96,8 +88,9 @@ export function EditScheduleDialog({
     .refine(
       (data) => {
         const newDep = parseISO(data.departureTime)
-        const otherFlights = existingSchedules.filter(
-          (s) => s.id !== schedule?.id
+
+        const otherFlights = props.existingSchedules.filter(
+          (s) => s.id !== props.schedule.id
         )
 
         const sameAirportFlights = otherFlights.filter(
@@ -107,6 +100,7 @@ export function EditScheduleDialog({
         const sameTimeFlights = sameAirportFlights.filter(
           (s) => parseISO(s.departureTime).getTime() === newDep.getTime()
         )
+
         if (sameTimeFlights.length >= 2) return false
 
         const tooClose = sameAirportFlights.some((s) => {
@@ -119,7 +113,7 @@ export function EditScheduleDialog({
       },
       {
         message:
-          "Viršytas limitas (max 2 skrydžiai vienu metu) arba tarpas tarp skrydžių mažesnis nei 20 min.",
+          "Viršytas limitas (max 2 skrydžiai vienu metu) arba tarpas mažesnis nei 20 min.",
         path: ["departureTime"],
       }
     )
@@ -129,32 +123,18 @@ export function EditScheduleDialog({
   })
 
   React.useEffect(() => {
-    if (schedule && open) {
-      form.reset({
-        flightNumber: schedule.flightNumber,
-        companyId: schedule.companyId,
-        airportId: schedule.airportId,
-        arrivalAirportId: schedule.arrivalAirportId,
-        departureTime: toDateTimeLocal(schedule.departureTime),
-        arrivalTime: toDateTimeLocal(schedule.arrivalTime),
-        hasArrived: schedule.hasArrived,
-      })
-    }
-  }, [schedule, open, form])
-
-  React.useEffect(() => {
-    if (!open) form.reset()
-  }, [open, form])
+    form.reset(props.schedule)
+  }, [props.schedule, form])
 
   function onSubmit(data: z.infer<typeof formSchema>) {
-    onConfirm(data)
-    toast.success(`Skrydžio informacija sėkmingai atnaujinta`)
+    props.onConfirm(data)
+    toast.success("Skrydžio informacija sėkmingai atnaujinta")
     form.reset()
-    onClose()
+    props.onClose()
   }
 
   return (
-    <Dialog open={open} onOpenChange={onClose}>
+    <Dialog open={true} onOpenChange={props.onClose}>
       <DialogContent className="max-w-2xl">
         <DialogHeader>
           <DialogTitle>Redaguoti skrydžio informaciją</DialogTitle>
@@ -175,18 +155,21 @@ export function EditScheduleDialog({
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel>Išvykimo oro uostas</FieldLabel>
+
                   <Select onValueChange={field.onChange} value={field.value}>
                     <SelectTrigger>
                       <SelectValue placeholder="Pasirinkite" />
                     </SelectTrigger>
+
                     <SelectContent>
-                      {airports.map((a) => (
+                      {props.airports.map((a) => (
                         <SelectItem key={a.id} value={a.id!}>
                           {a.name}
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
+
                   <FieldError errors={[fieldState.error]} />
                 </Field>
               )}
@@ -198,18 +181,21 @@ export function EditScheduleDialog({
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel>Atvykimo oro uostas</FieldLabel>
+
                   <Select onValueChange={field.onChange} value={field.value}>
                     <SelectTrigger>
                       <SelectValue placeholder="Pasirinkite" />
                     </SelectTrigger>
+
                     <SelectContent>
-                      {airports.map((a) => (
+                      {props.airports.map((a) => (
                         <SelectItem key={a.id} value={a.id!}>
                           {a.name}
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
+
                   <FieldError errors={[fieldState.error]} />
                 </Field>
               )}
@@ -221,18 +207,21 @@ export function EditScheduleDialog({
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel>Kompanija</FieldLabel>
+
                   <Select onValueChange={field.onChange} value={field.value}>
                     <SelectTrigger>
                       <SelectValue placeholder="Pasirinkite" />
                     </SelectTrigger>
+
                     <SelectContent>
-                      {companies.map((c) => (
+                      {props.companies.map((c) => (
                         <SelectItem key={c.id} value={c.id!}>
-                          {c.code}
+                          {c.name}
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
+
                   <FieldError errors={[fieldState.error]} />
                 </Field>
               )}
@@ -244,7 +233,9 @@ export function EditScheduleDialog({
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel>Reiso numeris</FieldLabel>
-                  <Input {...field} id="flight-number" />
+
+                  <Input {...field} />
+
                   <FieldError errors={[fieldState.error]} />
                 </Field>
               )}
@@ -256,7 +247,9 @@ export function EditScheduleDialog({
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel>Išvykimo laikas</FieldLabel>
+
                   <Input {...field} type="datetime-local" />
+
                   <FieldError errors={[fieldState.error]} />
                 </Field>
               )}
@@ -268,7 +261,9 @@ export function EditScheduleDialog({
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel>Atvykimo laikas</FieldLabel>
+
                   <Input {...field} type="datetime-local" />
+
                   <FieldError errors={[fieldState.error]} />
                 </Field>
               )}
@@ -281,14 +276,10 @@ export function EditScheduleDialog({
             render={({ field }) => (
               <div className="flex items-center space-x-2 py-2">
                 <Checkbox
-                  id="editHasArrived"
                   checked={field.value}
                   onCheckedChange={field.onChange}
                 />
-                <label
-                  htmlFor="editHasArrived"
-                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                >
+                <label className="text-sm font-medium">
                   Lėktuvas jau atvyko
                 </label>
               </div>
@@ -297,9 +288,10 @@ export function EditScheduleDialog({
         </form>
 
         <DialogFooter>
-          <Button variant="outline" onClick={onClose} type="button">
+          <Button variant="outline" onClick={props.onClose} type="button">
             Atšaukti
           </Button>
+
           <Button type="submit" form="edit-schedule-form">
             Išsaugoti pakeitimus
           </Button>
