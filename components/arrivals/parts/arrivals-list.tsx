@@ -11,6 +11,7 @@ type IProps = {
   flights: ISchedule[]
   airports: IAirport[]
   companies: ICompany[]
+  onToggleArrival: (flight: ISchedule) => void
 }
 
 export function ArrivalsList(props: IProps) {
@@ -56,11 +57,11 @@ export function ArrivalsList(props: IProps) {
               </div>
             </div>
 
-            <div className="flex items-center space-x-3 bg-slate-50 p-3 rounded-lg border">
+<div className="flex items-center space-x-3 bg-slate-50 p-3 rounded-lg border">
               <Checkbox
                 id={`arrived-${flight.id}`}
                 checked={flight.hasArrived}
-                disabled
+                onCheckedChange={() => props.onToggleArrival(flight)}
               />
               <Label
                 htmlFor={`arrived-${flight.id}`}

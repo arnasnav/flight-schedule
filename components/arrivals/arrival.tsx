@@ -1,11 +1,13 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useState } from "react"
 import { ISchedule } from "@/models/schedule-model"
 import { IAirport } from "@/models/airport-model"
 import { ICompany } from "@/models/company-model"
 import { ArrivalsSearch } from "./parts/arrivals-search"
 import { ArrivalsList } from "./parts/arrivals-list"
+import { putApi, getApi } from "@/utils/server-api"
+import { toast } from "sonner"
 
 type IProps = {
   schedules: ISchedule[]
@@ -14,21 +16,42 @@ type IProps = {
 }
 
 export function ArrivalsPage(props: IProps) {
+  const [schedules, setSchedules] = useState<ISchedule[]>(props.schedules)
   const [searchQuery, setSearchQuery] = useState("")
 
-  const filteredSchedules = useMemo(() => {
-    return props.schedules.filter((s) =>
-      s.flightNumber.toLowerCase().includes(searchQuery.toLowerCase())
+  const refreshSchedules = async () => {
+    const data = await getApi<ISchedule[]>("/api/schedule")
+    setSchedules(data ?? [])
+  }
+
+  const handleToggleArrival = async (flight: ISchedule) => {
+    await putApi(`/api/schedule/${flight.id}`, {
+      ...flight,
+      hasArrived: !flight.hasArrived,
+    })
+
+    toast.success(
+      flight.hasArrived
+        ? "Skrydžio atvykimas sėkmingai atšauktas"
+        : "Skrydžio atvykimas sėkmingai pažymėtas"
     )
-  }, [props.schedules, searchQuery])
+
+    await refreshSchedules()
+  }
+
+  const filteredSchedules = schedules.filter((s) =>
+    s.flightNumber.toLowerCase().includes(searchQuery.toLowerCase())
+  )
 
   return (
     <div className="p-8 w-full max-w-6xl mx-auto space-y-8">
       <div>
         <h1 className="text-3xl font-bold tracking-tight text-slate-900">
-          Atvykimai
+          Atvykimų valdymas
         </h1>
-        <p className="text-muted-foreground mt-1">Skrydžių atvykimo paieška.</p>
+        <p className="text-muted-foreground mt-1">
+          Pažymėkite atvykusius skrydžius.
+        </p>
       </div>
 
       <ArrivalsSearch value={searchQuery} onChange={setSearchQuery} />
@@ -37,6 +60,7 @@ export function ArrivalsPage(props: IProps) {
         flights={filteredSchedules}
         airports={props.airports}
         companies={props.companies}
+        onToggleArrival={handleToggleArrival}
       />
     </div>
   )
