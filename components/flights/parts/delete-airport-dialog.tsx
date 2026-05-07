@@ -12,33 +12,42 @@ import {
 import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
 
-type Props = {
-  open: boolean
+type IProps = {
   onClose: () => void
   onConfirm: () => void
 }
 
-export function DeleteAirportDialog({ open, onClose, onConfirm }: Props) {
+export function DeleteAirportDialog(props: IProps) {
+  const handleConfirm = () => {
+    props.onConfirm()
+
+    toast.success("Oro uostas sėkmingai ištrintas")
+
+    props.onClose()
+  }
+
   return (
-    <Dialog open={open} onOpenChange={onClose}>
+    <Dialog open={true} onOpenChange={props.onClose}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Trinti oro uostą?</DialogTitle>
-          <DialogDescription>Ar tikrai norite tęsti?</DialogDescription>
+
+          <DialogDescription>
+            Ar tikrai norite tęsti?
+          </DialogDescription>
         </DialogHeader>
 
         <DialogFooter>
-          <Button variant="outline" onClick={onClose}>
+          <Button
+            variant="outline"
+            onClick={props.onClose}
+          >
             Atšaukti
           </Button>
 
           <Button
             variant="destructive"
-            onClick={() => {
-              onConfirm()
-              toast.success("Oro uostas sėkmingai ištrintas")
-              onClose()
-            }}
+            onClick={handleConfirm}
           >
             Ištrinti
           </Button>

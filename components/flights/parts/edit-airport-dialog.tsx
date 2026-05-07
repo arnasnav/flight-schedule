@@ -19,21 +19,14 @@ import { Field, FieldLabel, FieldError } from "@/components/ui/field"
 import { IAirport } from "@/models/airport-model"
 import { toast } from "sonner"
 
-type Props = {
-  airport: IAirport | null
-  open: boolean
+type IProps = {
+  airport: IAirport
   onClose: () => void
   onConfirm: (newName: string) => void
   existingNames: string[]
 }
 
-export function EditAirportDialog({
-  airport,
-  open,
-  onClose,
-  onConfirm,
-  existingNames,
-}: Props) {
+export function EditAirportDialog(props: IProps) {
   const formSchema = z.object({
     name: z
       .string()
@@ -42,16 +35,18 @@ export function EditAirportDialog({
       .max(50, "Pavadinimas per ilgas.")
       .refine(
         (val) => {
-          if (airport && val.toLowerCase() === airport.name.toLowerCase()) {
+          if (val.toLowerCase() === props.airport.name.toLowerCase()) {
             return true
           }
-          return !existingNames.some(
+
+          return !props.existingNames.some(
             (name) => name.toLowerCase() === val.toLowerCase()
           )
         },
         { message: "Oro uostas tokiu pavadinimu jau egzistuoja." }
       ),
   })
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -60,33 +55,28 @@ export function EditAirportDialog({
   })
 
   React.useEffect(() => {
-    if (airport) {
-      form.reset({ name: airport.name })
-    }
-  }, [airport, form])
+    form.reset(props.airport)
+  }, [props.airport, form])
 
-  React.useEffect(() => {
-    if (!open) form.reset()
-  }, [open, form])
-
-  function onSubmit(data: z.infer<typeof formSchema>) {
-    onConfirm(data.name)
-    toast.success(`Oro uostas sėkmingai redaguotas`)
+  const handleSubmit = (data: z.infer<typeof formSchema>) => {
+    props.onConfirm(data.name)
+    toast.success("Oro uostas sėkmingai redaguotas")
     form.reset()
-    onClose()
+    props.onClose()
   }
 
   return (
-    <Dialog open={open} onOpenChange={onClose}>
+    <Dialog open={true} onOpenChange={props.onClose}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Redaguoti oro uostą</DialogTitle>
+
           <DialogDescription>
             Įveskite naują oro uosto pavadinimą.
           </DialogDescription>
         </DialogHeader>
 
-        <form id="edit-airport-form" onSubmit={form.handleSubmit(onSubmit)}>
+        <form id="edit-airport-form" onSubmit={form.handleSubmit(handleSubmit)}>
           <div className="grid gap-4 py-4">
             <Controller
               name="name"
@@ -111,9 +101,10 @@ export function EditAirportDialog({
         </form>
 
         <DialogFooter>
-          <Button variant="outline" onClick={onClose} type="button">
+          <Button variant="outline" onClick={props.onClose} type="button">
             Atšaukti
           </Button>
+
           <Button type="submit" form="edit-airport-form">
             Išsaugoti
           </Button>
