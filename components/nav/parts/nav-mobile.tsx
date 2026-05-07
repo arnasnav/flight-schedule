@@ -1,18 +1,18 @@
-import { Bars4Icon } from "@heroicons/react/24/outline"
+import { Menu } from "lucide-react"
 
-type Props = {
+type IProps = {
   isVisible: boolean
   onToggle: () => void
 }
 
-export function NavMobileToggle({ onToggle }: Props) {
+export function NavMobileToggle(props: IProps) {
   return (
     <button
-      onClick={onToggle}
+      onClick={props.onToggle}
       type="button"
       className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100"
     >
-      <Bars4Icon className="h-7 w-7 stroke-gray-800" />
+      <Menu className="h-7 w-7 stroke-gray-800" />
     </button>
   )
 }
