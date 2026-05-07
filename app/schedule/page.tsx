@@ -1,4 +1,4 @@
-import { Schedule } from "@/components/schedule/schedule-page"
+import { Schedule } from "@/components/schedule/schedule"
 import { getApi } from "@/utils/server-api"
 import { ISchedule } from "@/models/schedule-model"
 import { IAirport } from "@/models/airport-model"
