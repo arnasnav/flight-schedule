@@ -3,13 +3,13 @@ import { WithStringId } from "./model-t"
 
 export interface ICompany {
   id?: string
-  code: string
+  name: string
 }
 
 type IReturnType = WithStringId<ICompany>
 
 const CompanySchema = new Schema<ICompany>(
-  { code: String },
+  { name: String },
   {
     timestamps: false,
     collection: "companies",
