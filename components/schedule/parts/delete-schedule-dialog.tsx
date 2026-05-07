@@ -8,18 +8,24 @@ import {
   DialogFooter,
   DialogDescription,
 } from "@/components/ui/dialog"
+
 import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
 
-type Props = {
-  open: boolean
+type IProps = {
   onClose: () => void
   onConfirm: () => void
 }
 
-export function DeleteScheduleDialog({ open, onClose, onConfirm }: Props) {
+export function DeleteScheduleDialog(props: IProps) {
+  const handleConfirm = () => {
+    props.onConfirm()
+    toast.success("Skrydis sėkmingai ištrintas")
+    props.onClose()
+  }
+
   return (
-    <Dialog open={open} onOpenChange={onClose}>
+    <Dialog open={true} onOpenChange={props.onClose}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Trinti skrydį?</DialogTitle>
@@ -27,17 +33,11 @@ export function DeleteScheduleDialog({ open, onClose, onConfirm }: Props) {
         </DialogHeader>
 
         <DialogFooter>
-          <Button variant="outline" onClick={onClose}>
+          <Button variant="outline" onClick={props.onClose}>
             Atšaukti
           </Button>
-          <Button
-            variant="destructive"
-            onClick={() => {
-              onConfirm()
-              toast.success("Skrydis sėkmingai ištrintas")
-              onClose()
-            }}
-          >
+
+          <Button variant="destructive" onClick={handleConfirm}>
             Ištrinti
           </Button>
         </DialogFooter>
