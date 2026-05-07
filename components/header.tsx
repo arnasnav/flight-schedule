@@ -3,10 +3,13 @@ import { INav } from "@/types/nav-t"
 
 const menu: INav[] = [
   {
+    title: "Tvarkaraštis",
+    slug: "/schedule",
+  },
+  {
     title: "Klasifikatoriai",
     slug: "/classifiers",
     children: [
-      { title: "Tvarkaraštis", slug: "/schedule" },
       { title: "Oro uostai", slug: "/airports" },
       { title: "Kompanijos", slug: "/companies" },
     ],
