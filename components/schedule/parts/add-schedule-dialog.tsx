@@ -29,6 +29,7 @@ import {
 import { IAirport } from "@/models/airport-model"
 import { ICompany } from "@/models/company-model"
 import { ISchedule } from "@/models/schedule-model"
+import { toast } from "sonner"
 
 type Props = {
   open: boolean
@@ -124,7 +125,9 @@ export function AddScheduleDialog({
 
   function onSubmit(data: z.infer<typeof formSchema>) {
     onConfirm(data)
+    toast.success(`Skrydis sėkmingai pridėtas`)
     form.reset()
+    onClose()
   }
 
   React.useEffect(() => {

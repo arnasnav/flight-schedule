@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Field, FieldLabel, FieldError } from "@/components/ui/field"
 import { IAirport } from "@/models/airport-model"
+import { toast } from "sonner"
 
 type Props = {
   airport: IAirport | null
@@ -70,7 +71,9 @@ export function EditAirportDialog({
 
   function onSubmit(data: z.infer<typeof formSchema>) {
     onConfirm(data.name)
+    toast.success(`Oro uostas sėkmingai redaguotas`)
     form.reset()
+    onClose()
   }
 
   return (

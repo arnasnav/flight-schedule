@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dialog"
 
 import { Button } from "@/components/ui/button"
+import { toast } from "sonner"
 
 type Props = {
   open: boolean
@@ -31,7 +32,14 @@ export function DeleteCompanyDialog({ open, onClose, onConfirm }: Props) {
             Atšaukti
           </Button>
 
-          <Button variant="destructive" onClick={onConfirm}>
+          <Button
+            variant="destructive"
+            onClick={() => {
+              onConfirm()
+              toast.success("Kompanija sėkmingai ištrinta")
+              onClose()
+            }}
+          >
             Ištrinti
           </Button>
         </DialogFooter>

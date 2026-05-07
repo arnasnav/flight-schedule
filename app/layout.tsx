@@ -4,6 +4,7 @@ import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { ReactNode } from "react"
 import { StoreProvider } from "@/components/providers/store-provider"
+import { Toaster } from "@/components/ui/sonner"
 
 export const metadata: Metadata = {
   title: "Lėktuvų tvarkaraštis",
@@ -22,6 +23,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 
             <Footer />
           </div>
+
+          <Toaster position="bottom-right" richColors closeButton />
         </StoreProvider>
       </body>
     </html>

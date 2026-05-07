@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Field, FieldLabel, FieldError } from "@/components/ui/field"
 import { ICompany } from "@/models/company-model"
+import { toast } from "sonner"
 
 type Props = {
   company: ICompany | null
@@ -70,7 +71,9 @@ export function EditCompanyDialog({
 
   function onSubmit(data: z.infer<typeof formSchema>) {
     onConfirm(data.code)
+    toast.success(`Kompanija sėkmingai redaguota`)
     form.reset()
+    onClose()
   }
 
   return (

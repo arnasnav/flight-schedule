@@ -9,6 +9,7 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
+import { toast } from "sonner"
 
 type Props = {
   open: boolean
@@ -29,7 +30,14 @@ export function DeleteScheduleDialog({ open, onClose, onConfirm }: Props) {
           <Button variant="outline" onClick={onClose}>
             Atšaukti
           </Button>
-          <Button variant="destructive" onClick={onConfirm}>
+          <Button
+            variant="destructive"
+            onClick={() => {
+              onConfirm()
+              toast.success("Skrydis sėkmingai ištrintas")
+              onClose()
+            }}
+          >
             Ištrinti
           </Button>
         </DialogFooter>

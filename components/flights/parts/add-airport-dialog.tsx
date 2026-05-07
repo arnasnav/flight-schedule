@@ -16,6 +16,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Field, FieldLabel, FieldError } from "@/components/ui/field"
+import { toast } from "sonner"
 
 type Props = {
   open: boolean
@@ -54,7 +55,9 @@ export function AddAirportDialog({
 
   function onSubmit(data: z.infer<typeof formSchema>) {
     onConfirm(data.name)
+    toast.success(`Oro uostas sėkmingai pridėtas`)
     form.reset()
+    onClose()
   }
 
   React.useEffect(() => {
