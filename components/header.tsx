@@ -7,6 +7,10 @@ const menu: INav[] = [
     slug: "/schedule",
   },
   {
+    title: "Atvykimai",
+    slug: "/arrivals",
+  },
+  {
     title: "Klasifikatoriai",
     slug: "/classifiers",
     children: [
