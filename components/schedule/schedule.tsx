@@ -13,7 +13,6 @@ import { AddScheduleDialog } from "./parts/add-schedule-dialog"
 import { DeleteScheduleDialog } from "./parts/delete-schedule-dialog"
 import { EditScheduleDialog } from "./parts/edit-schedule-dialog"
 import { ScheduleList } from "./parts/schedule-list"
-import { toast } from "sonner"
 
 type IProps = {
   initialSchedules: ISchedule[]
@@ -23,13 +22,13 @@ type IProps = {
 
 export function Schedule(props: IProps) {
   const [schedules, setSchedules] = useState<ISchedule[]>(
-    props.initialSchedules
+    props.initialSchedules,
   )
 
   const [isAddOpen, setIsAddOpen] = useState(false)
   const [deleteId, setDeleteId] = useState<string | undefined>(undefined)
   const [editingSchedule, setEditingSchedule] = useState<ISchedule | undefined>(
-    undefined
+    undefined,
   )
 
   const refreshSchedules = async () => {
@@ -38,44 +37,26 @@ export function Schedule(props: IProps) {
   }
 
   const handleAdd = async (formData: any) => {
-    try {
-      const res = await postApi("/api/schedule", formData)
-      if (!res) return
-      setIsAddOpen(false)
-      await refreshSchedules()
-    } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Nepavyko pridėti skrydžio"
-      toast.error(message)
-    }
+    const res = await postApi("/api/schedule", formData)
+    if (!res) return
+    setIsAddOpen(false)
+    await refreshSchedules()
   }
 
   const handleEdit = async (formData: any) => {
     if (!editingSchedule) return
 
-    try {
-      await putApi(`/api/schedule/${editingSchedule.id}`, formData)
-      setEditingSchedule(undefined)
-      await refreshSchedules()
-    } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Nepavyko atnaujinti skrydžio"
-      toast.error(message)
-    }
+    await putApi(`/api/schedule/${editingSchedule.id}`, formData)
+    setEditingSchedule(undefined)
+    await refreshSchedules()
   }
 
   const handleDelete = async () => {
     if (!deleteId) return
 
-    try {
-      await deleteApi("/api/schedule", deleteId)
-      setDeleteId(undefined)
-      await refreshSchedules()
-    } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Nepavyko ištrinti skrydžio"
-      toast.error(message)
-    }
+    await deleteApi("/api/schedule", deleteId)
+    setDeleteId(undefined)
+    await refreshSchedules()
   }
 
   return (
