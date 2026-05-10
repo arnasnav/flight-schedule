@@ -13,6 +13,7 @@ import { AddScheduleDialog } from "./parts/add-schedule-dialog"
 import { DeleteScheduleDialog } from "./parts/delete-schedule-dialog"
 import { EditScheduleDialog } from "./parts/edit-schedule-dialog"
 import { ScheduleList } from "./parts/schedule-list"
+import { toast } from "sonner"
 
 type IProps = {
   initialSchedules: ISchedule[]
@@ -37,29 +38,44 @@ export function Schedule(props: IProps) {
   }
 
   const handleAdd = async (formData: any) => {
-    const res = await postApi("/api/schedule", formData)
-
-    if (res) {
+    try {
+      const res = await postApi("/api/schedule", formData)
+      if (!res) return
       setIsAddOpen(false)
       await refreshSchedules()
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Nepavyko pridėti skrydžio"
+      toast.error(message)
     }
   }
 
   const handleEdit = async (formData: any) => {
     if (!editingSchedule) return
 
-    await putApi(`/api/schedule/${editingSchedule.id}`, formData)
-
-    setEditingSchedule(undefined)
-    await refreshSchedules()
+    try {
+      await putApi(`/api/schedule/${editingSchedule.id}`, formData)
+      setEditingSchedule(undefined)
+      await refreshSchedules()
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Nepavyko atnaujinti skrydžio"
+      toast.error(message)
+    }
   }
 
   const handleDelete = async () => {
     if (!deleteId) return
 
-    await deleteApi("/api/schedule", deleteId)
-    setDeleteId(undefined)
-    await refreshSchedules()
+    try {
+      await deleteApi("/api/schedule", deleteId)
+      setDeleteId(undefined)
+      await refreshSchedules()
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Nepavyko ištrinti skrydžio"
+      toast.error(message)
+    }
   }
 
   return (
