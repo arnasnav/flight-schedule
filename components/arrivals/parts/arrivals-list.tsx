@@ -1,8 +1,8 @@
 "use client"
 
-import { ISchedule } from "@/models/schedule-model"
-import { IAirport } from "@/models/airport-model"
-import { ICompany } from "@/models/company-model"
+import type { ISchedule } from "@/models/schedule-model"
+import type { IAirport } from "@/models/airport-model"
+import type { ICompany } from "@/models/company-model"
 import { Card, CardContent } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"

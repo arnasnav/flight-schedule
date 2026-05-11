@@ -1,9 +1,9 @@
 "use client"
 
 import { useState } from "react"
-import { ISchedule } from "@/models/schedule-model"
-import { IAirport } from "@/models/airport-model"
-import { ICompany } from "@/models/company-model"
+import type { ISchedule } from "@/models/schedule-model"
+import type { IAirport } from "@/models/airport-model"
+import type { ICompany } from "@/models/company-model"
 import { ArrivalsSearch } from "./parts/arrivals-search"
 import { ArrivalsList } from "./parts/arrivals-list"
 import { putApi, getApi } from "@/utils/server-api"
@@ -15,17 +15,18 @@ type IProps = {
   companies: ICompany[]
 }
 
-export function ArrivalsPage(props: IProps) {
+export function Arrivals(props: IProps) {
   const [schedules, setSchedules] = useState<ISchedule[]>(props.schedules)
   const [searchQuery, setSearchQuery] = useState("")
 
   const refreshSchedules = async () => {
-    const data = await getApi<ISchedule[]>("/api/schedule")
+    const data = await getApi<ISchedule[]>("/api/schedules")
     setSchedules(data ?? [])
   }
 
   const handleToggleArrival = async (flight: ISchedule) => {
-    await putApi(`/api/schedule/${flight.id}`, {
+    await putApi(`/api/schedules`, {
+      id: flight.id,
       ...flight,
       hasArrived: !flight.hasArrived,
     })

@@ -1,6 +1,6 @@
 "use client"
 
-import { IAirport } from "@/models/airport-model"
+import type { IAirport } from "@/models/airport-model"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 
@@ -25,7 +25,9 @@ export function AirportList(props: IProps) {
         <li key={airport.id}>
           <div className="flex items-center justify-between px-4 py-3">
             <div className="flex flex-col leading-tight">
-              <span className="text-sm font-medium">{airport.name}</span>
+              <span className="text-sm font-medium">
+                {airport.name} ({airport.code})
+              </span>
               <span className="text-xs text-slate-400 font-mono">
                 ID: {airport.id}
               </span>

@@ -16,13 +16,13 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Field, FieldLabel, FieldError } from "@/components/ui/field"
-import { ICompany } from "@/models/company-model"
+import type { ICompany } from "@/models/company-model"
 import { toast } from "sonner"
 
 type IProps = {
   company: ICompany
   onClose: () => void
-  onConfirm: (newName: string) => void
+  onConfirm: (newName: string, newCode: string) => void
   existingNames: string[]
 }
 
@@ -45,12 +45,18 @@ export function EditCompanyDialog(props: IProps) {
         },
         { message: "Kompanija tokiu pavadinimu jau egzistuoja." }
       ),
+    code: z
+      .string()
+      .trim()
+      .min(2, "Kodas per trumpas.")
+      .max(2, "Kodas per ilgas."),
   })
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
+      code: "",
     },
   })
 
@@ -59,7 +65,7 @@ export function EditCompanyDialog(props: IProps) {
   }, [props.company, form])
 
   function onSubmit(data: z.infer<typeof formSchema>) {
-    props.onConfirm(data.name)
+    props.onConfirm(data.name, data.code)
     toast.success("Kompanija sėkmingai redaguota")
     form.reset()
     props.onClose()
@@ -89,6 +95,28 @@ export function EditCompanyDialog(props: IProps) {
                     {...field}
                     id="company-name"
                     aria-invalid={fieldState.invalid}
+                  />
+
+                  {fieldState.error && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+
+            <Controller
+              name="code"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="company-code">Kodas</FieldLabel>
+
+                  <Input
+                    {...field}
+                    id="company-code"
+                    placeholder="FR"
+                    aria-invalid={fieldState.invalid}
+                    autoComplete="off"
                   />
 
                   {fieldState.error && (

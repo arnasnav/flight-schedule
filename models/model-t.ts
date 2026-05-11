@@ -1,1 +1,1 @@
-export type WithStringId<T> = Omit<T, "id"> & { id: string }
+export type IWithStringId<T> = Omit<T, "id"> & { id: string }

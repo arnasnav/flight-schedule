@@ -1,15 +1,19 @@
 import { model, models, Schema, Model, Types } from "mongoose"
-import { WithStringId } from "./model-t"
+import type { IWithStringId } from "./model-t"
 
 export interface IAirport {
   id?: string
   name: string
+  code: string
 }
 
-type IReturnType = WithStringId<IAirport>
+type IReturnType = IWithStringId<IAirport>
 
 const AirportSchema = new Schema<IAirport>(
-  { name: String },
+  {
+    name: String,
+    code: String,
+  },
   {
     timestamps: false,
     collection: "airports",

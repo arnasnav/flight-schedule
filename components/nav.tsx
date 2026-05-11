@@ -1,6 +1,6 @@
 "use client"
 
-import { INav } from "@/types/nav-t"
+import type { INav } from "@/types/nav-t"
 import { useState } from "react"
 
 import { NavLinks } from "@/components/nav/parts/nav-links"

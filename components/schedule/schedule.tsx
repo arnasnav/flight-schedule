@@ -1,9 +1,9 @@
 "use client"
 
 import { useState } from "react"
-import { IAirport } from "@/models/airport-model"
-import { ICompany } from "@/models/company-model"
-import { ISchedule } from "@/models/schedule-model"
+import type { IAirport } from "@/models/airport-model"
+import type { ICompany } from "@/models/company-model"
+import type { ISchedule } from "@/models/schedule-model"
 import { getApi, postApi, putApi, deleteApi } from "@/utils/server-api"
 
 import { Card, CardContent } from "@/components/ui/card"
@@ -13,40 +13,44 @@ import { AddScheduleDialog } from "./parts/add-schedule-dialog"
 import { DeleteScheduleDialog } from "./parts/delete-schedule-dialog"
 import { EditScheduleDialog } from "./parts/edit-schedule-dialog"
 import { ScheduleList } from "./parts/schedule-list"
+import type { IStatus } from "@/models/status-model"
 
 type IProps = {
   initialSchedules: ISchedule[]
   airports: IAirport[]
   companies: ICompany[]
+  statuses: IStatus[]
 }
 
 export function Schedule(props: IProps) {
   const [schedules, setSchedules] = useState<ISchedule[]>(
-    props.initialSchedules,
+    props.initialSchedules
   )
 
   const [isAddOpen, setIsAddOpen] = useState(false)
   const [deleteId, setDeleteId] = useState<string | undefined>(undefined)
   const [editingSchedule, setEditingSchedule] = useState<ISchedule | undefined>(
-    undefined,
+    undefined
   )
 
   const refreshSchedules = async () => {
-    const data = await getApi<ISchedule[]>("/api/schedule")
+    const data = await getApi<ISchedule[]>("/api/schedules")
     setSchedules(data ?? [])
   }
 
-  const handleAdd = async (formData: any) => {
-    const res = await postApi("/api/schedule", formData)
-    if (!res) return
+  const handleAdd = async (formData: ISchedule) => {
+    await postApi("/api/schedules", formData)
     setIsAddOpen(false)
     await refreshSchedules()
   }
 
-  const handleEdit = async (formData: any) => {
+  const handleEdit = async (formData: ISchedule) => {
     if (!editingSchedule) return
 
-    await putApi(`/api/schedule/${editingSchedule.id}`, formData)
+    await putApi("/api/schedules", {
+      id: editingSchedule.id,
+      ...formData,
+    })
     setEditingSchedule(undefined)
     await refreshSchedules()
   }
@@ -54,7 +58,7 @@ export function Schedule(props: IProps) {
   const handleDelete = async () => {
     if (!deleteId) return
 
-    await deleteApi("/api/schedule", deleteId)
+    await deleteApi("/api/schedules", deleteId)
     setDeleteId(undefined)
     await refreshSchedules()
   }
@@ -92,6 +96,7 @@ export function Schedule(props: IProps) {
           onConfirm={handleAdd}
           airports={props.airports}
           companies={props.companies}
+          statuses={props.statuses}
           existingSchedules={schedules}
         />
       )}
@@ -103,6 +108,7 @@ export function Schedule(props: IProps) {
           onConfirm={handleEdit}
           airports={props.airports}
           companies={props.companies}
+          statuses={props.statuses}
           existingSchedules={schedules}
         />
       )}

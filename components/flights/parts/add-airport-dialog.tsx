@@ -21,7 +21,7 @@ import { toast } from "sonner"
 
 type IProps = {
   onClose: () => void
-  onConfirm: (name: string) => void
+  onConfirm: (name: string, code: string) => void
   existingNames: string[]
 }
 
@@ -41,17 +41,23 @@ export function AddAirportDialog(props: IProps) {
           message: "Oro uostas tokiu pavadinimu jau egzistuoja.",
         }
       ),
+    code: z
+      .string()
+      .trim()
+      .min(2, "Kodas per trumpas.")
+      .max(2, "Kodas per ilgas."),
   })
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
+      code: "",
     },
   })
 
   const handleSubmit = (data: z.infer<typeof formSchema>) => {
-    props.onConfirm(data.name)
+    props.onConfirm(data.name, data.code)
     toast.success("Oro uostas sėkmingai pridėtas")
     form.reset()
     props.onClose()
@@ -83,6 +89,28 @@ export function AddAirportDialog(props: IProps) {
                     {...field}
                     id="airport-name"
                     placeholder="Vilniaus oro uostas"
+                    aria-invalid={fieldState.invalid}
+                    autoComplete="off"
+                  />
+
+                  {fieldState.error && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+
+            <Controller
+              name="code"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="airport-code">Kodas</FieldLabel>
+
+                  <Input
+                    {...field}
+                    id="airport-code"
+                    placeholder="VNO"
                     aria-invalid={fieldState.invalid}
                     autoComplete="off"
                   />

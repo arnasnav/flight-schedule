@@ -1,4 +1,4 @@
-import { CompanyService } from "@/services/company-service"
+import { ScheduleService } from "@/services/schedule-service"
 
 export async function DELETE(
   request: Request,
@@ -6,8 +6,8 @@ export async function DELETE(
 ) {
   const { id } = await params
 
-  const companyService = new CompanyService()
-  await companyService.deleteCompany(id)
+  const scheduleService = new ScheduleService()
+  await scheduleService.deleteSchedule(id)
 
   return Response.json({ message: "Deleted successfully" })
 }

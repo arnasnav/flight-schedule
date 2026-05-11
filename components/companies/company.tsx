@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { ICompany } from "@/models/company-model"
+import type { ICompany } from "@/models/company-model"
 import { getApi, postApi, putApi, deleteApi } from "@/utils/server-api"
 
 import { Card, CardContent } from "@/components/ui/card"
@@ -30,17 +30,19 @@ export function Companies(props: IProps) {
     setCompanies(data ?? [])
   }
 
-  const handleAdd = async (name: string) => {
-    await postApi("/api/companies", { name })
+  const handleAdd = async (name: string, code: string) => {
+    await postApi("/api/companies", { name, code })
     setIsAddOpen(false)
     await refreshCompanies()
   }
 
-  const handleEdit = async (newName: string) => {
+  const handleEdit = async (newName: string, newCode: string) => {
     if (!editingCompany) return
 
-    await putApi(`/api/companies/${editingCompany.id}`, {
+    await putApi("/api/companies", {
+      id: editingCompany.id,
       name: newName,
+      code: newCode,
     })
 
     setEditingCompany(undefined)

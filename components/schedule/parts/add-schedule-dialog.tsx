@@ -1,7 +1,14 @@
 "use client"
 
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Controller, SubmitHandler, useFieldArray, useForm } from "react-hook-form"
+import {
+  Controller,
+  useFieldArray,
+  useForm,
+} from "react-hook-form"
+import type {
+  SubmitHandler,
+} from "react-hook-form"
 import * as z from "zod"
 import { differenceInMinutes, isBefore, parseISO } from "date-fns"
 
@@ -26,10 +33,11 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 
-import { IAirport } from "@/models/airport-model"
-import { ICompany } from "@/models/company-model"
-import { ISchedule } from "@/models/schedule-model"
+import type { IAirport } from "@/models/airport-model"
+import type { ICompany } from "@/models/company-model"
+import type { ISchedule } from "@/models/schedule-model"
 import { toast } from "sonner"
+import type { IStatus } from "@/models/status-model"
 
 type IProps = {
   onClose: () => void
@@ -37,30 +45,15 @@ type IProps = {
   airports: IAirport[]
   companies: ICompany[]
   existingSchedules: ISchedule[]
+  statuses: IStatus[]
 }
 
 export function AddScheduleDialog(props: IProps) {
-  const flightStatusOptions = [
-    "Suplanuotas",
-    "Laipinimas",
-    "Vartai uždaryti",
-    "Išskrido",
-    "Vėluoja",
-    "Atvyko",
-    "Atšauktas",
-  ]
-
   const formSchema = z
     .object({
       airportId: z.string().min(1, "Pasirinkite išvykimo oro uostą"),
       companyId: z.string().min(1, "Pasirinkite kompaniją"),
       flightId: z.string().trim().min(1, "Įveskite skrydžio ID"),
-      departureAirportCode: z.string().trim().min(1, "Įveskite kodą"),
-      departureAirportName: z.string().trim().min(1, "Įveskite pavadinimą"),
-      arrivalAirportCode: z.string().trim().min(1, "Įveskite kodą"),
-      arrivalAirportName: z.string().trim().min(1, "Įveskite pavadinimą"),
-      airlineCode: z.string().trim().min(1, "Įveskite kodą"),
-      airlineName: z.string().trim().min(1, "Įveskite pavadinimą"),
       flightNumber: z
         .string()
         .trim()
@@ -104,8 +97,7 @@ export function AddScheduleDialog(props: IProps) {
       baggageLimit: z.string().trim().min(1, "Įveskite limitą"),
       stopoverAirports: z.array(
         z.object({
-          code: z.string().trim().min(1, "Įveskite kodą"),
-          name: z.string().trim().min(1, "Įveskite pavadinimą"),
+          airportId: z.string().min(1, "Pasirinkite oro uostą"),
         })
       ),
       hasArrived: z.boolean(),
@@ -169,12 +161,6 @@ export function AddScheduleDialog(props: IProps) {
       airportId: "",
       companyId: "",
       flightId: "",
-      departureAirportCode: "",
-      departureAirportName: "",
-      arrivalAirportCode: "",
-      arrivalAirportName: "",
-      airlineCode: "",
-      airlineName: "",
       flightNumber: "",
       departureTime: "",
       arrivalAirportId: "",
@@ -201,8 +187,16 @@ export function AddScheduleDialog(props: IProps) {
   })
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
+    const formattedStopovers = data.stopoverAirports.map((s) => {
+      const airport = props.airports.find((a) => a.id === s.airportId)
+      return {
+        code: airport?.code || "",
+        name: airport?.name || "",
+      }
+    })
     await props.onConfirm({
       ...data,
+      stopoverAirports: formattedStopovers,
       seatCount: Number(data.seatCount),
       availableSeatCount: Number(data.availableSeatCount),
       flightPrice: Number(data.flightPrice),
@@ -242,7 +236,7 @@ export function AddScheduleDialog(props: IProps) {
                     <SelectContent>
                       {props.airports.map((a) => (
                         <SelectItem key={a.id} value={a.id!}>
-                          {a.name}
+                          {a.name} ({a.code})
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -265,7 +259,7 @@ export function AddScheduleDialog(props: IProps) {
                     <SelectContent>
                       {props.airports.map((a) => (
                         <SelectItem key={a.id} value={a.id!}>
-                          {a.name}
+                          {a.name} ({a.code})
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -288,7 +282,7 @@ export function AddScheduleDialog(props: IProps) {
                     <SelectContent>
                       {props.companies.map((c) => (
                         <SelectItem key={c.id} value={c.id!}>
-                          {c.name}
+                          {c.name} ({c.code})
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -315,13 +309,13 @@ export function AddScheduleDialog(props: IProps) {
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel>Skrydžio ID</FieldLabel>
-                  <Input {...field} placeholder="pvz. FLIGHT-2026-0001" />
+                  <Input {...field} placeholder="pvz. 123" />
                   <FieldError errors={[fieldState.error]} />
                 </Field>
               )}
             />
             <div className="col-span-full pt-2">
-              <p className="text-sm font-semibold">Laikai</p>
+              <p className="text-sm font-semibold">Išvykimo laikai</p>
             </div>
 
             <Controller
@@ -329,7 +323,7 @@ export function AddScheduleDialog(props: IProps) {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel>Išvykimo laikas</FieldLabel>
+                  <FieldLabel>Išvykimas</FieldLabel>
                   <Input {...field} type="datetime-local" />
                   <FieldError errors={[fieldState.error]} />
                 </Field>
@@ -340,7 +334,7 @@ export function AddScheduleDialog(props: IProps) {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel>Planuotas išvykimo laikas</FieldLabel>
+                  <FieldLabel>Planuotas išvykimas</FieldLabel>
                   <Input {...field} type="datetime-local" />
                   <FieldError errors={[fieldState.error]} />
                 </Field>
@@ -351,19 +345,23 @@ export function AddScheduleDialog(props: IProps) {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel>Faktinis išvykimo laikas</FieldLabel>
+                  <FieldLabel>Faktinis išvykimas</FieldLabel>
                   <Input {...field} type="datetime-local" />
                   <FieldError errors={[fieldState.error]} />
                 </Field>
               )}
             />
 
+            <div className="col-span-full pt-2">
+              <p className="text-sm font-semibold">Atvykimo laikai</p>
+            </div>
+
             <Controller
               name="arrivalTime"
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel>Atvykimo laikas</FieldLabel>
+                  <FieldLabel>Atvykimas</FieldLabel>
                   <Input {...field} type="datetime-local" />
                   <FieldError errors={[fieldState.error]} />
                 </Field>
@@ -374,7 +372,7 @@ export function AddScheduleDialog(props: IProps) {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel>Planuotas atvykimo laikas</FieldLabel>
+                  <FieldLabel>Planuotas atvykimas</FieldLabel>
                   <Input {...field} type="datetime-local" />
                   <FieldError errors={[fieldState.error]} />
                 </Field>
@@ -385,83 +383,16 @@ export function AddScheduleDialog(props: IProps) {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel>Faktinis atvykimo laikas</FieldLabel>
+                  <FieldLabel>Faktinis atvykimas</FieldLabel>
                   <Input {...field} type="datetime-local" />
                   <FieldError errors={[fieldState.error]} />
                 </Field>
               )}
             />
             <div className="col-span-full pt-2">
-              <p className="text-sm font-semibold">Maršrutas ir aviakompanija</p>
-            </div>
-            <Controller
-              name="departureAirportCode"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel>Išvykimo oro uosto kodas</FieldLabel>
-                  <Input {...field} placeholder="pvz. VNO" />
-                  <FieldError errors={[fieldState.error]} />
-                </Field>
-              )}
-            />
-            <Controller
-              name="departureAirportName"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel>Išvykimo oro uosto pavadinimas</FieldLabel>
-                  <Input {...field} placeholder="pvz. Vilniaus oro uostas" />
-                  <FieldError errors={[fieldState.error]} />
-                </Field>
-              )}
-            />
-            <Controller
-              name="arrivalAirportCode"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel>Atvykimo oro uosto kodas</FieldLabel>
-                  <Input {...field} placeholder="pvz. RIX" />
-                  <FieldError errors={[fieldState.error]} />
-                </Field>
-              )}
-            />
-            <Controller
-              name="arrivalAirportName"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel>Atvykimo oro uosto pavadinimas</FieldLabel>
-                  <Input {...field} placeholder="pvz. Rygos oro uostas" />
-                  <FieldError errors={[fieldState.error]} />
-                </Field>
-              )}
-            />
-            <Controller
-              name="airlineCode"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel>Aviakompanijos kodas</FieldLabel>
-                  <Input {...field} placeholder="pvz. FR" />
-                  <FieldError errors={[fieldState.error]} />
-                </Field>
-              )}
-            />
-            <Controller
-              name="airlineName"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel>Aviakompanijos pavadinimas</FieldLabel>
-                  <Input {...field} placeholder="pvz. Ryanair" />
-                  <FieldError errors={[fieldState.error]} />
-                </Field>
-              )}
-            />
-            <div className="col-span-full pt-2">
-              <p className="text-sm font-semibold">Skrydžio būsena ir techninė informacija</p>
+              <p className="text-sm font-semibold">
+                Skrydžio būsena ir techninė informacija
+              </p>
             </div>
             <Controller
               name="flightStatus"
@@ -474,9 +405,9 @@ export function AddScheduleDialog(props: IProps) {
                       <SelectValue placeholder="Pasirinkite būseną" />
                     </SelectTrigger>
                     <SelectContent>
-                      {flightStatusOptions.map((status) => (
-                        <SelectItem key={status} value={status}>
-                          {status}
+                      {props.statuses.map((status) => (
+                        <SelectItem key={status.id} value={status.name}>
+                          {status.name}
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -546,7 +477,12 @@ export function AddScheduleDialog(props: IProps) {
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel>Skrydžio kaina</FieldLabel>
-                  <Input {...field} type="number" step="0.01" placeholder="pvz. 129.99" />
+                  <Input
+                    {...field}
+                    type="number"
+                    step="0.01"
+                    placeholder="pvz. 129.99"
+                  />
                   <FieldError errors={[fieldState.error]} />
                 </Field>
               )}
@@ -557,7 +493,7 @@ export function AddScheduleDialog(props: IProps) {
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel>Bagažo limitas</FieldLabel>
-                  <Input {...field} placeholder="pvz. 20 kg + 8 kg rankinis" />
+                  <Input {...field} placeholder="pvz. 20" />
                   <FieldError errors={[fieldState.error]} />
                 </Field>
               )}
@@ -569,38 +505,48 @@ export function AddScheduleDialog(props: IProps) {
                   type="button"
                   variant="outline"
                   size="sm"
-                  onClick={() => stopovers.append({ code: "", name: "" })}
+                  onClick={() => stopovers.append({ airportId: "" })}
                 >
                   Pridėti
                 </Button>
               </div>
+
               {stopovers.fields.length === 0 && (
                 <p className="text-sm text-muted-foreground">
                   Tarpinių uostų nepridėta.
                 </p>
               )}
+
               {stopovers.fields.map((field, index) => (
-                <div key={field.id} className="grid grid-cols-[1fr_2fr_auto] gap-2">
+                <div
+                  key={field.id}
+                  className="grid grid-cols-[1fr_auto] gap-2 items-end"
+                >
                   <Controller
-                    name={`stopoverAirports.${index}.code`}
+                    name={`stopoverAirports.${index}.airportId`}
                     control={form.control}
                     render={({ field: inputField, fieldState }) => (
                       <Field data-invalid={fieldState.invalid}>
-                        <Input {...inputField} placeholder="Kodas (pvz. RIX)" />
+                        <Select
+                          value={inputField.value}
+                          onValueChange={inputField.onChange}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Pasirinkite tarpinį oro uostą" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {props.airports.map((a) => (
+                              <SelectItem key={a.id} value={a.id!}>
+                                {a.name} ({a.code})
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
                         <FieldError errors={[fieldState.error]} />
                       </Field>
                     )}
                   />
-                  <Controller
-                    name={`stopoverAirports.${index}.name`}
-                    control={form.control}
-                    render={({ field: inputField, fieldState }) => (
-                      <Field data-invalid={fieldState.invalid}>
-                        <Input {...inputField} placeholder="Pavadinimas" />
-                        <FieldError errors={[fieldState.error]} />
-                      </Field>
-                    )}
-                  />
+
                   <Button
                     type="button"
                     variant="destructive"

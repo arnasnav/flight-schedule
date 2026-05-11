@@ -1,5 +1,5 @@
 import { NavPage } from "@/components/nav"
-import { INav } from "@/types/nav-t"
+import type { INav } from "@/types/nav-t"
 
 const menu: INav[] = [
   {

@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { IAirport } from "@/models/airport-model"
+import type { IAirport } from "@/models/airport-model"
 import { getApi, postApi, putApi, deleteApi } from "@/utils/server-api"
 
 import { Card, CardContent } from "@/components/ui/card"
@@ -31,17 +31,19 @@ export function Airports(props: IProps) {
     setAirports(data ?? [])
   }
 
-  const handleAdd = async (name: string) => {
-    await postApi("/api/airports", { name })
+  const handleAdd = async (name: string, code: string) => {
+    await postApi("/api/airports", { name, code })
     setIsAddOpen(false)
     await refreshAirports()
   }
 
-  const handleEdit = async (newName: string) => {
+  const handleEdit = async (newName: string, newCode: string) => {
     if (!editingAirport) return
 
-    await putApi(`/api/airports/${editingAirport.id}`, {
+    await putApi("/api/airports", {
+      id: editingAirport.id,
       name: newName,
+      code: newCode,
     })
 
     setEditingAirport(undefined)

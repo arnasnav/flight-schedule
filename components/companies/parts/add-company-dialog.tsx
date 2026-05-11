@@ -20,7 +20,7 @@ import { toast } from "sonner"
 
 type IProps = {
   onClose: () => void
-  onConfirm: (name: string) => void
+  onConfirm: (name: string, code: string) => void
   existingNames: string[]
 }
 
@@ -40,17 +40,23 @@ export function AddCompanyDialog(props: IProps) {
           message: "Kompanija tokiu pavadinimu jau egzistuoja.",
         }
       ),
+    code: z
+      .string()
+      .trim()
+      .min(2, "Kodas per trumpas.")
+      .max(2, "Kodas per ilgas."),
   })
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
+      code: "",
     },
   })
 
   function onSubmit(data: z.infer<typeof formSchema>) {
-    props.onConfirm(data.name)
+    props.onConfirm(data.name, data.code)
     toast.success("Kompanija sėkmingai pridėta")
     form.reset()
     props.onClose()
@@ -82,6 +88,28 @@ export function AddCompanyDialog(props: IProps) {
                     {...field}
                     id="company-name"
                     placeholder="Ryanair"
+                    aria-invalid={fieldState.invalid}
+                    autoComplete="off"
+                  />
+
+                  {fieldState.error && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+
+            <Controller
+              name="code"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="company-code">Kodas</FieldLabel>
+
+                  <Input
+                    {...field}
+                    id="company-code"
+                    placeholder="FR"
                     aria-invalid={fieldState.invalid}
                     autoComplete="off"
                   />

@@ -1,29 +1,25 @@
 import { model, models, Schema, Model, Types } from "mongoose"
 import type { IWithStringId } from "./model-t"
 
-export interface ICompany {
+export interface IStatus {
   id?: string
   name: string
-  code: string
 }
 
-type IReturnType = IWithStringId<ICompany>
+type IReturnType = IWithStringId<IStatus>
 
-const CompanySchema = new Schema<ICompany>(
-  {
-    name: String,
-    code: String,
-  },
+const StatusSchema = new Schema<IStatus>(
+  { name: String },
   {
     timestamps: false,
-    collection: "companies",
+    collection: "statuses",
     strict: true,
     versionKey: false,
     toJSON: {
       virtuals: true,
       transform: (
         _doc: unknown,
-        ret: ICompany & { _id: Types.ObjectId }
+        ret: IStatus & { _id: Types.ObjectId }
       ): IReturnType => {
         const { _id, ...rest } = ret
         return { ...rest, id: _id.toString() }
@@ -32,5 +28,5 @@ const CompanySchema = new Schema<ICompany>(
   }
 )
 
-export const Company: Model<ICompany> =
-  models.Company || model("Company", CompanySchema)
+export const Status: Model<IStatus> =
+  models.Status || model("Status", StatusSchema)

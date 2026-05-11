@@ -1,4 +1,5 @@
-import { Company, ICompany } from "@/models/company-model"
+import { Company } from "@/models/company-model"
+import type { ICompany } from "@/models/company-model"
 import { connectMongoose } from "@/utils/mongoose-client"
 import { Types } from "mongoose"
 

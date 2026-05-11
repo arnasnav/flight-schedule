@@ -1,4 +1,5 @@
-import { Airport, IAirport } from "@/models/airport-model"
+import { Airport } from "@/models/airport-model"
+import type { IAirport } from "@/models/airport-model"
 import { connectMongoose } from "@/utils/mongoose-client"
 import { Types } from "mongoose"
 

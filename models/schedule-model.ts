@@ -1,23 +1,17 @@
 import { model, models, Schema, Model, Types } from "mongoose"
-import { WithStringId } from "./model-t"
+import type { IWithStringId } from "./model-t"
 
 export interface ISchedule {
   id?: string
   flightId: string
   airportId: string
-  departureAirportCode: string
-  departureAirportName: string
   companyId: string
-  airlineCode: string
-  airlineName: string
   flightNumber: string
   departureTime: string
   scheduledDepartureTime: string
   actualDepartureTime: string
   arrivalAirportId: string
   arrivalTime: string
-  arrivalAirportCode: string
-  arrivalAirportName: string
   scheduledArrivalTime: string
   actualArrivalTime: string
   flightStatus: string
@@ -32,25 +26,19 @@ export interface ISchedule {
   hasArrived: boolean
 }
 
-type IReturnType = WithStringId<ISchedule>
+type IReturnType = IWithStringId<ISchedule>
 
 const ScheduleSchema = new Schema<ISchedule>(
   {
     flightId: { type: String, required: true, unique: true },
     airportId: { type: String, required: true },
-    departureAirportCode: { type: String, required: true },
-    departureAirportName: { type: String, required: true },
     companyId: { type: String, required: true },
-    airlineCode: { type: String, required: true },
-    airlineName: { type: String, required: true },
     flightNumber: { type: String, required: true, unique: true },
     departureTime: { type: String, required: true },
     scheduledDepartureTime: { type: String, required: true },
     actualDepartureTime: { type: String, required: true },
     arrivalAirportId: { type: String, required: true },
     arrivalTime: { type: String, required: true },
-    arrivalAirportCode: { type: String, required: true },
-    arrivalAirportName: { type: String, required: true },
     scheduledArrivalTime: { type: String, required: true },
     actualArrivalTime: { type: String, required: true },
     flightStatus: { type: String, required: true },

@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { INav } from "@/types/nav-t"
+import type { INav } from "@/types/nav-t"
 
 import {
   NavigationMenu,
