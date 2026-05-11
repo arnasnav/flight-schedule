@@ -10,8 +10,8 @@ type IProps = {
   onEdit: (company: ICompany) => void
 }
 
-export function CompanyList(props: IProps) {
-  if (props.companies.length === 0) {
+export function CompanyList({ companies, onDelete, onEdit }: IProps) {
+  if (companies.length === 0) {
     return (
       <div className="p-4 text-sm text-muted-foreground">
         Kraunama arba nėra įrašų
@@ -21,7 +21,7 @@ export function CompanyList(props: IProps) {
 
   return (
     <ul>
-      {props.companies.map((company, index) => (
+      {companies.map((company, index) => (
         <li key={company.id}>
           <div className="flex items-center justify-between px-4 py-3">
             <div className="flex flex-col leading-tight">
@@ -37,7 +37,7 @@ export function CompanyList(props: IProps) {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => props.onEdit(company)}
+                onClick={() => onEdit(company)}
               >
                 Keisti
               </Button>
@@ -45,14 +45,14 @@ export function CompanyList(props: IProps) {
               <Button
                 variant="destructive"
                 size="sm"
-                onClick={() => props.onDelete(company.id!)}
+                onClick={() => onDelete(company.id!)}
               >
                 Ištrinti
               </Button>
             </div>
           </div>
 
-          {index !== props.companies.length - 1 && <Separator />}
+          {index !== companies.length - 1 && <Separator />}
         </li>
       ))}
     </ul>

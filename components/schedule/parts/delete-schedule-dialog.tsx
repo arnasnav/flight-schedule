@@ -17,15 +17,15 @@ type IProps = {
   onConfirm: () => void
 }
 
-export function DeleteScheduleDialog(props: IProps) {
+export function DeleteScheduleDialog({ onClose, onConfirm }: IProps) {
   const handleConfirm = () => {
-    props.onConfirm()
+    onConfirm()
     toast.success("Skrydis sėkmingai ištrintas")
-    props.onClose()
+    onClose()
   }
 
   return (
-    <Dialog open={true} onOpenChange={props.onClose}>
+    <Dialog open={true} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Trinti skrydį?</DialogTitle>
@@ -33,7 +33,7 @@ export function DeleteScheduleDialog(props: IProps) {
         </DialogHeader>
 
         <DialogFooter>
-          <Button variant="outline" onClick={props.onClose}>
+          <Button variant="outline" onClick={onClose}>
             Atšaukti
           </Button>
 

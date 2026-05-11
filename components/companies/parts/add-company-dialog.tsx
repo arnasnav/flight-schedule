@@ -1,6 +1,5 @@
 "use client"
 
-import * as React from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Controller, useForm } from "react-hook-form"
 import * as z from "zod"
@@ -24,7 +23,11 @@ type IProps = {
   existingNames: string[]
 }
 
-export function AddCompanyDialog(props: IProps) {
+export function AddCompanyDialog({
+  onClose,
+  onConfirm,
+  existingNames,
+}: IProps) {
   const formSchema = z.object({
     name: z
       .string()
@@ -33,7 +36,7 @@ export function AddCompanyDialog(props: IProps) {
       .max(25, "Pavadinimas per ilgas.")
       .refine(
         (val) =>
-          !props.existingNames.some(
+          !existingNames.some(
             (name) => name.toLowerCase() === val.toLowerCase()
           ),
         {
@@ -56,14 +59,14 @@ export function AddCompanyDialog(props: IProps) {
   })
 
   function onSubmit(data: z.infer<typeof formSchema>) {
-    props.onConfirm(data.name, data.code)
+    onConfirm(data.name, data.code)
     toast.success("Kompanija sėkmingai pridėta")
     form.reset()
-    props.onClose()
+    onClose()
   }
 
   return (
-    <Dialog open={true} onOpenChange={props.onClose}>
+    <Dialog open={true} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Pridėti naują kompaniją</DialogTitle>
@@ -76,6 +79,7 @@ export function AddCompanyDialog(props: IProps) {
             <Controller
               name="name"
               control={form.control}
+              defaultValue=""
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor="company-name">Pavadinimas</FieldLabel>
@@ -120,7 +124,7 @@ export function AddCompanyDialog(props: IProps) {
         </form>
 
         <DialogFooter>
-          <Button variant="outline" onClick={props.onClose} type="button">
+          <Button variant="outline" onClick={onClose} type="button">
             Atšaukti
           </Button>
 

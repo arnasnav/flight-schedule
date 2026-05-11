@@ -14,14 +14,19 @@ type IProps = {
   onToggleArrival: (flight: ISchedule) => void
 }
 
-export function ArrivalsList(props: IProps) {
+export function ArrivalsList({
+  flights,
+  airports,
+  companies,
+  onToggleArrival,
+}: IProps) {
   const getAirportName = (id: string) =>
-    props.airports.find((a) => a.id === id)?.name
+    airports.find((a) => a.id === id)?.name
 
   const getCompanyName = (id: string) =>
-    props.companies.find((c) => c.id === id)?.name
+    companies.find((c) => c.id === id)?.name
 
-  if (props.flights.length === 0) {
+  if (flights.length === 0) {
     return (
       <div className="text-center py-12 text-muted-foreground border-2 border-dashed rounded-xl">
         Skrydžių pagal šį numerį nerasta.
@@ -31,7 +36,7 @@ export function ArrivalsList(props: IProps) {
 
   return (
     <div className="grid gap-4">
-      {props.flights.map((flight) => (
+      {flights.map((flight) => (
         <Card key={flight.id} className="hover:shadow-md transition">
           <CardContent className="p-6 flex items-center justify-between">
             <div className="flex gap-8 items-center">
@@ -61,7 +66,7 @@ export function ArrivalsList(props: IProps) {
               <Checkbox
                 id={`arrived-${flight.id}`}
                 checked={flight.hasArrived}
-                onCheckedChange={() => props.onToggleArrival(flight)}
+                onCheckedChange={() => onToggleArrival(flight)}
               />
               <Label
                 htmlFor={`arrived-${flight.id}`}

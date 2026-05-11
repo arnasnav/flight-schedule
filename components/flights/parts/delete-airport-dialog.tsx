@@ -17,17 +17,17 @@ type IProps = {
   onConfirm: () => void
 }
 
-export function DeleteAirportDialog(props: IProps) {
+export function DeleteAirportDialog({ onClose, onConfirm }: IProps) {
   const handleConfirm = () => {
-    props.onConfirm()
+    onConfirm()
 
     toast.success("Oro uostas sėkmingai ištrintas")
 
-    props.onClose()
+    onClose()
   }
 
   return (
-    <Dialog open={true} onOpenChange={props.onClose}>
+    <Dialog open={true} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Trinti oro uostą?</DialogTitle>
@@ -40,7 +40,7 @@ export function DeleteAirportDialog(props: IProps) {
         <DialogFooter>
           <Button
             variant="outline"
-            onClick={props.onClose}
+            onClick={onClose}
           >
             Atšaukti
           </Button>

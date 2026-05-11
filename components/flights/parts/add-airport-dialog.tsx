@@ -1,6 +1,5 @@
 "use client"
 
-import * as React from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Controller, useForm } from "react-hook-form"
 import * as z from "zod"
@@ -25,7 +24,11 @@ type IProps = {
   existingNames: string[]
 }
 
-export function AddAirportDialog(props: IProps) {
+export function AddAirportDialog({
+  onClose,
+  onConfirm,
+  existingNames,
+}: IProps) {
   const formSchema = z.object({
     name: z
       .string()
@@ -34,7 +37,7 @@ export function AddAirportDialog(props: IProps) {
       .max(50, "Pavadinimas per ilgas.")
       .refine(
         (val) =>
-          !props.existingNames.some(
+          !existingNames.some(
             (name) => name.toLowerCase() === val.toLowerCase()
           ),
         {
@@ -57,14 +60,14 @@ export function AddAirportDialog(props: IProps) {
   })
 
   const handleSubmit = (data: z.infer<typeof formSchema>) => {
-    props.onConfirm(data.name, data.code)
+    onConfirm(data.name, data.code)
     toast.success("Oro uostas sėkmingai pridėtas")
     form.reset()
-    props.onClose()
+    onClose()
   }
 
   return (
-    <Dialog open={true} onOpenChange={props.onClose}>
+    <Dialog open={true} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Pridėti oro uostą</DialogTitle>
@@ -121,7 +124,7 @@ export function AddAirportDialog(props: IProps) {
         </form>
 
         <DialogFooter>
-          <Button variant="outline" onClick={props.onClose} type="button">
+          <Button variant="outline" onClick={onClose} type="button">
             Atšaukti
           </Button>
 

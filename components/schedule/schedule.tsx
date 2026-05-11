@@ -22,15 +22,18 @@ type IProps = {
   statuses: IStatus[]
 }
 
-export function Schedule(props: IProps) {
-  const [schedules, setSchedules] = useState<ISchedule[]>(
-    props.initialSchedules
-  )
+export function Schedule({
+  initialSchedules,
+  airports,
+  companies,
+  statuses,
+}: IProps) {
+  const [schedules, setSchedules] = useState<ISchedule[]>(initialSchedules)
 
   const [isAddOpen, setIsAddOpen] = useState(false)
   const [deleteId, setDeleteId] = useState<string | undefined>(undefined)
   const [editingSchedule, setEditingSchedule] = useState<ISchedule | undefined>(
-    undefined
+    undefined,
   )
 
   const refreshSchedules = async () => {
@@ -82,8 +85,8 @@ export function Schedule(props: IProps) {
         <CardContent className="p-0">
           <ScheduleList
             schedules={schedules}
-            airports={props.airports}
-            companies={props.companies}
+            airports={airports}
+            companies={companies}
             onEdit={setEditingSchedule}
             onDelete={setDeleteId}
           />
@@ -94,21 +97,22 @@ export function Schedule(props: IProps) {
         <AddScheduleDialog
           onClose={() => setIsAddOpen(false)}
           onConfirm={handleAdd}
-          airports={props.airports}
-          companies={props.companies}
-          statuses={props.statuses}
+          airports={airports}
+          companies={companies}
+          statuses={statuses}
           existingSchedules={schedules}
         />
       )}
 
       {editingSchedule && (
         <EditScheduleDialog
+          key={editingSchedule.id}
           schedule={editingSchedule}
           onClose={() => setEditingSchedule(undefined)}
           onConfirm={handleEdit}
-          airports={props.airports}
-          companies={props.companies}
-          statuses={props.statuses}
+          airports={airports}
+          companies={companies}
+          statuses={statuses}
           existingSchedules={schedules}
         />
       )}

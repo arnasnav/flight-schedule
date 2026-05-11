@@ -13,12 +13,18 @@ type IProps = {
   onDelete: (id: string) => void
 }
 
-export function ScheduleList(props: IProps) {
-  const companyMap = Object.fromEntries(props.companies.map((c) => [c.id, c]))
+export function ScheduleList({
+  schedules,
+  airports,
+  companies,
+  onEdit,
+  onDelete,
+}: IProps) {
+  const companyMap = Object.fromEntries(companies.map((c) => [c.id, c]))
 
-  const airportMap = Object.fromEntries(props.airports.map((a) => [a.id, a]))
+  const airportMap = Object.fromEntries(airports.map((a) => [a.id, a]))
 
-  if (props.schedules.length === 0) {
+  if (schedules.length === 0) {
     return (
       <div className="p-12 text-center text-sm text-muted-foreground">
         Skrydžių nerasta
@@ -40,7 +46,7 @@ export function ScheduleList(props: IProps) {
       </thead>
 
       <tbody className="divide-y divide-slate-100">
-        {props.schedules.map((s) => {
+        {schedules.map((s) => {
           const company = companyMap[s.companyId]
           const departureAirport = airportMap[s.airportId]
           const arrivalAirport = airportMap[s.arrivalAirportId]
@@ -121,8 +127,8 @@ export function ScheduleList(props: IProps) {
                 <div>
                   Vietos: {s.availableSeatCount}/{s.seatCount}
                 </div>
-                <div>Kaina: {s.flightPrice}</div>
-                <div>Bagažas: {s.baggageLimit}</div>
+                <div>Kaina: {s.flightPrice} &euro;</div>
+                <div>Bagažas: {s.baggageLimit} kg</div>
               </td>
 
               <td className="px-6 py-4 text-xs space-y-2">
@@ -155,7 +161,7 @@ export function ScheduleList(props: IProps) {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => props.onEdit(s)}
+                  onClick={() => onEdit(s)}
                 >
                   Keisti
                 </Button>
@@ -163,7 +169,7 @@ export function ScheduleList(props: IProps) {
                 <Button
                   variant="destructive"
                   size="sm"
-                  onClick={() => props.onDelete(s.id!)}
+                  onClick={() => onDelete(s.id!)}
                 >
                   Ištrinti
                 </Button>

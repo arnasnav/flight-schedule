@@ -15,8 +15,12 @@ type IProps = {
   companies: ICompany[]
 }
 
-export function Arrivals(props: IProps) {
-  const [schedules, setSchedules] = useState<ISchedule[]>(props.schedules)
+export function Arrivals({
+  schedules: initialSchedules,
+  airports,
+  companies,
+}: IProps) {
+  const [schedules, setSchedules] = useState<ISchedule[]>(initialSchedules)
   const [searchQuery, setSearchQuery] = useState("")
 
   const refreshSchedules = async () => {
@@ -59,8 +63,8 @@ export function Arrivals(props: IProps) {
 
       <ArrivalsList
         flights={filteredSchedules}
-        airports={props.airports}
-        companies={props.companies}
+        airports={airports}
+        companies={companies}
         onToggleArrival={handleToggleArrival}
       />
     </div>

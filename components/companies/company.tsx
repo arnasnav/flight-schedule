@@ -15,8 +15,8 @@ type IProps = {
   companies: ICompany[]
 }
 
-export function Companies(props: IProps) {
-  const [companies, setCompanies] = useState<ICompany[]>(props.companies)
+export function Companies({ companies: initialCompanies }: IProps) {
+  const [companies, setCompanies] = useState<ICompany[]>(initialCompanies)
   const [deleteId, setDeleteId] = useState<string | undefined>(undefined)
   const [editingCompany, setEditingCompany] = useState<ICompany | undefined>(
     undefined
@@ -92,6 +92,7 @@ export function Companies(props: IProps) {
 
       {editingCompany && (
         <EditCompanyDialog
+          key={editingCompany.id}
           company={editingCompany}
           onClose={() => setEditingCompany(undefined)}
           onConfirm={handleEdit}

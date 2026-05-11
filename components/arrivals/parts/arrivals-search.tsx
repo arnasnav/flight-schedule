@@ -9,7 +9,7 @@ type IProps = {
   onChange: (val: string) => void
 }
 
-export function ArrivalsSearch(props: IProps) {
+export function ArrivalsSearch({ value, onChange }: IProps) {
   return (
     <Card className="shadow-sm">
       <CardHeader>
@@ -21,8 +21,8 @@ export function ArrivalsSearch(props: IProps) {
           <Input
             id="flight-search"
             placeholder="SK123"
-            value={props.value}
-            onChange={(e) => props.onChange(e.target.value)}
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
             className="mt-1"
           />
         </div>

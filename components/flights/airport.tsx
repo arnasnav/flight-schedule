@@ -16,8 +16,8 @@ type IProps = {
   airports: IAirport[]
 }
 
-export function Airports(props: IProps) {
-  const [airports, setAirports] = useState<IAirport[]>(props.airports)
+export function Airports({ airports: initialAirports }: IProps) {
+  const [airports, setAirports] = useState<IAirport[]>(initialAirports)
   const [deleteId, setDeleteId] = useState<string | undefined>(undefined)
   const [editingAirport, setEditingAirport] = useState<IAirport | undefined>(
     undefined
@@ -93,6 +93,7 @@ export function Airports(props: IProps) {
 
       {editingAirport && (
         <EditAirportDialog
+          key={editingAirport.id}
           airport={editingAirport}
           onClose={() => setEditingAirport(undefined)}
           onConfirm={handleEdit}

@@ -15,7 +15,7 @@ type IProps = {
   children: ReactNode
 }
 
-export default function RootLayout(props: IProps) {
+export default function RootLayout({ children }: IProps) {
   return (
     <html lang="lt">
       <body className="min-h-screen bg-background">
@@ -23,7 +23,7 @@ export default function RootLayout(props: IProps) {
           <div className="mx-auto flex min-h-screen w-full max-w-7xl flex-col px-4">
             <Header />
 
-            <main className="flex-1">{props.children}</main>
+            <main className="flex-1">{children}</main>
 
             <Footer />
           </div>

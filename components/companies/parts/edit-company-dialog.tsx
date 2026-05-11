@@ -1,6 +1,5 @@
 "use client"
 
-import * as React from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Controller, useForm } from "react-hook-form"
 import * as z from "zod"
@@ -26,7 +25,12 @@ type IProps = {
   existingNames: string[]
 }
 
-export function EditCompanyDialog(props: IProps) {
+export function EditCompanyDialog({
+  company,
+  onClose,
+  onConfirm,
+  existingNames,
+}: IProps) {
   const formSchema = z.object({
     name: z
       .string()
@@ -35,11 +39,11 @@ export function EditCompanyDialog(props: IProps) {
       .max(25, "Pavadinimas per ilgas.")
       .refine(
         (val) => {
-          if (val.toLowerCase() === props.company.name.toLowerCase()) {
+          if (val.toLowerCase() === company.name.toLowerCase()) {
             return true
           }
 
-          return !props.existingNames.some(
+          return !existingNames.some(
             (name) => name.toLowerCase() === val.toLowerCase(),
           )
         },
@@ -55,20 +59,20 @@ export function EditCompanyDialog(props: IProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: props.company.name,
-      code: props.company.code,
+      name: company.name,
+      code: company.code,
     },
   })
 
   function onSubmit(data: z.infer<typeof formSchema>) {
-    props.onConfirm(data.name, data.code)
+    onConfirm(data.name, data.code)
     toast.success("Kompanija sėkmingai redaguota")
     form.reset()
-    props.onClose()
+    onClose()
   }
 
   return (
-    <Dialog open={true} onOpenChange={props.onClose}>
+    <Dialog open={true} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Redaguoti kompaniją</DialogTitle>
@@ -125,7 +129,7 @@ export function EditCompanyDialog(props: IProps) {
         </form>
 
         <DialogFooter>
-          <Button variant="outline" onClick={props.onClose} type="button">
+          <Button variant="outline" onClick={onClose} type="button">
             Atšaukti
           </Button>
 

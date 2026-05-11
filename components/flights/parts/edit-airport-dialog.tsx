@@ -1,6 +1,5 @@
 "use client"
 
-import * as React from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Controller, useForm } from "react-hook-form"
 import * as z from "zod"
@@ -27,7 +26,12 @@ type IProps = {
   existingNames: string[]
 }
 
-export function EditAirportDialog(props: IProps) {
+export function EditAirportDialog({
+  airport,
+  onClose,
+  onConfirm,
+  existingNames,
+}: IProps) {
   const formSchema = z.object({
     name: z
       .string()
@@ -36,11 +40,11 @@ export function EditAirportDialog(props: IProps) {
       .max(50, "Pavadinimas per ilgas.")
       .refine(
         (val) => {
-          if (val.toLowerCase() === props.airport.name.toLowerCase()) {
+          if (val.toLowerCase() === airport.name.toLowerCase()) {
             return true
           }
 
-          return !props.existingNames.some(
+          return !existingNames.some(
             (name) => name.toLowerCase() === val.toLowerCase(),
           )
         },
@@ -57,22 +61,22 @@ export function EditAirportDialog(props: IProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: props.airport.name,
-      code: props.airport.code,
+      name: airport.name,
+      code: airport.code,
     },
   })
 
   const handleSubmit = (data: z.infer<typeof formSchema>) => {
-    props.onConfirm(data.name, data.code)
+    onConfirm(data.name, data.code)
 
     toast.success("Oro uostas sėkmingai redaguotas")
 
     form.reset()
-    props.onClose()
+    onClose()
   }
 
   return (
-    <Dialog open={true} onOpenChange={props.onClose}>
+    <Dialog open={true} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Redaguoti oro uostą</DialogTitle>
@@ -130,7 +134,7 @@ export function EditAirportDialog(props: IProps) {
         </form>
 
         <DialogFooter>
-          <Button variant="outline" onClick={props.onClose} type="button">
+          <Button variant="outline" onClick={onClose} type="button">
             Atšaukti
           </Button>
 

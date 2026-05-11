@@ -7,13 +7,13 @@ type IProps = {
   isVisible: boolean
 }
 
-export function NavLinks(props: IProps) {
+export function NavLinks({ menu, isVisible }: IProps) {
   return (
     <div
-      className={`w-full md:block md:w-auto ${props.isVisible ? "" : "hidden"}`}
+      className={`w-full md:block md:w-auto ${isVisible ? "" : "hidden"}`}
     >
       <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 border md:flex-row md:items-center md:space-x-8 md:mt-0 md:border-0 md:bg-white">
-        {props.menu.map((item) => (
+        {menu.map((item) => (
           <li key={item.slug}>
             {item.children?.length ? (
               <NavDropdown item={item} />

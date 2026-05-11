@@ -14,18 +14,18 @@ type IProps = {
   item: INav
 }
 
-export function NavDropdown(props: IProps) {
+export function NavDropdown({ item }: IProps) {
   return (
     <NavigationMenu>
       <NavigationMenuList>
         <NavigationMenuItem>
           <NavigationMenuTrigger className="bg-transparent p-0 text-base font-medium">
-            {props.item.title}
+            {item.title}
           </NavigationMenuTrigger>
 
           <NavigationMenuContent>
             <ul className="grid w-48 gap-1 p-2">
-              {props.item.children?.map((child) => (
+              {item.children?.map((child) => (
                 <li key={child.slug}>
                   <NavigationMenuLink asChild>
                     <Link
