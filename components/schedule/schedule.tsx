@@ -22,13 +22,13 @@ type IProps = {
 
 export function Schedule(props: IProps) {
   const [schedules, setSchedules] = useState<ISchedule[]>(
-    props.initialSchedules
+    props.initialSchedules,
   )
 
   const [isAddOpen, setIsAddOpen] = useState(false)
   const [deleteId, setDeleteId] = useState<string | undefined>(undefined)
   const [editingSchedule, setEditingSchedule] = useState<ISchedule | undefined>(
-    undefined
+    undefined,
   )
 
   const refreshSchedules = async () => {
@@ -38,18 +38,15 @@ export function Schedule(props: IProps) {
 
   const handleAdd = async (formData: any) => {
     const res = await postApi("/api/schedule", formData)
-
-    if (res) {
-      setIsAddOpen(false)
-      await refreshSchedules()
-    }
+    if (!res) return
+    setIsAddOpen(false)
+    await refreshSchedules()
   }
 
   const handleEdit = async (formData: any) => {
     if (!editingSchedule) return
 
     await putApi(`/api/schedule/${editingSchedule.id}`, formData)
-
     setEditingSchedule(undefined)
     await refreshSchedules()
   }
