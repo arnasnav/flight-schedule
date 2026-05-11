@@ -1,5 +1,5 @@
-import { StateCreator } from "zustand"
-import { INotificationSlice } from "./store-t"
+import type { StateCreator } from "zustand"
+import type { INotificationSlice } from "./store-t"
 
 export const createNotificationSlice: StateCreator<
   INotificationSlice,
