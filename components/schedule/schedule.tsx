@@ -13,13 +13,17 @@ import { AddScheduleDialog } from "./parts/add-schedule-dialog"
 import { DeleteScheduleDialog } from "./parts/delete-schedule-dialog"
 import { EditScheduleDialog } from "./parts/edit-schedule-dialog"
 import { ScheduleList } from "./parts/schedule-list"
+import type { IAircraft } from "@/models/aircraft-model"
 import type { IStatus } from "@/models/status-model"
+import type { ITerminal } from "@/models/terminal-model"
 
 type IProps = {
   initialSchedules: ISchedule[]
   airports: IAirport[]
   companies: ICompany[]
   statuses: IStatus[]
+  terminals: ITerminal[]
+  aircrafts: IAircraft[]
 }
 
 export function Schedule({
@@ -27,6 +31,8 @@ export function Schedule({
   airports,
   companies,
   statuses,
+  terminals,
+  aircrafts,
 }: IProps) {
   const [schedules, setSchedules] = useState<ISchedule[]>(initialSchedules)
 
@@ -100,6 +106,8 @@ export function Schedule({
           airports={airports}
           companies={companies}
           statuses={statuses}
+          terminals={terminals}
+          aircrafts={aircrafts}
           existingSchedules={schedules}
         />
       )}
@@ -113,6 +121,8 @@ export function Schedule({
           airports={airports}
           companies={companies}
           statuses={statuses}
+          terminals={terminals}
+          aircrafts={aircrafts}
           existingSchedules={schedules}
         />
       )}

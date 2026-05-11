@@ -2,9 +2,11 @@
 
 import { Dialog, DialogContent } from "@/components/ui/dialog"
 import type { IAirport } from "@/models/airport-model"
+import type { IAircraft } from "@/models/aircraft-model"
 import type { ICompany } from "@/models/company-model"
 import type { ISchedule } from "@/models/schedule-model"
 import type { IStatus } from "@/models/status-model"
+import type { ITerminal } from "@/models/terminal-model"
 
 import { EditScheduleDialogForm } from "./edit-schedule-dialog-form"
 
@@ -16,6 +18,8 @@ type IProps = {
   companies: ICompany[]
   existingSchedules: ISchedule[]
   statuses: IStatus[]
+  terminals: ITerminal[]
+  aircrafts: IAircraft[]
 }
 
 export function EditScheduleDialog({
@@ -26,6 +30,8 @@ export function EditScheduleDialog({
   companies,
   existingSchedules,
   statuses,
+  terminals,
+  aircrafts,
 }: IProps) {
   return (
     <Dialog open={true} onOpenChange={onClose}>
@@ -38,6 +44,8 @@ export function EditScheduleDialog({
           companies={companies}
           existingSchedules={existingSchedules}
           statuses={statuses}
+          terminals={terminals}
+          aircrafts={aircrafts}
         />
       </DialogContent>
     </Dialog>

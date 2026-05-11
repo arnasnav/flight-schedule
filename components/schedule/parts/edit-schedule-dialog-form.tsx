@@ -14,9 +14,11 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import type { IAirport } from "@/models/airport-model"
+import type { IAircraft } from "@/models/aircraft-model"
 import type { ICompany } from "@/models/company-model"
 import type { ISchedule } from "@/models/schedule-model"
 import type { IStatus } from "@/models/status-model"
+import type { ITerminal } from "@/models/terminal-model"
 
 import { EditScheduleFormFieldsMain } from "./edit-schedule-form-fields-main"
 import { EditScheduleFormFieldsRest } from "./edit-schedule-form-fields-rest"
@@ -33,6 +35,8 @@ type IProps = {
   companies: ICompany[]
   existingSchedules: ISchedule[]
   statuses: IStatus[]
+  terminals: ITerminal[]
+  aircrafts: IAircraft[]
 }
 
 export function EditScheduleDialogForm({
@@ -43,6 +47,8 @@ export function EditScheduleDialogForm({
   companies,
   existingSchedules,
   statuses,
+  terminals,
+  aircrafts,
 }: IProps) {
   const scheduleId = schedule.id ?? ""
   const formSchema = createEditScheduleFormSchema(scheduleId, existingSchedules)
@@ -54,18 +60,33 @@ export function EditScheduleDialogForm({
       seatCount: String(schedule.seatCount ?? 0),
       availableSeatCount: String(schedule.availableSeatCount ?? 0),
       flightPrice: String(schedule.flightPrice ?? 0),
-      stopoverAirports: schedule.stopoverAirports ?? [],
+      stopoverAirports: (schedule.stopoverAirports ?? []).map((s) => {
+        const airport = airports.find(
+          (a) => a.code === s.code || a.name === s.name,
+        )
+        return { airportId: airport?.id ?? "" }
+      }),
     },
   })
 
+  const { control, setValue, getValues } = form
+
   const stopovers = useFieldArray({
-    control: form.control,
+    control,
     name: "stopoverAirports",
   })
 
   const onSubmit: SubmitHandler<EditScheduleFormValues> = async (data) => {
+    const formattedStopovers = data.stopoverAirports.map((s) => {
+      const airport = airports.find((a) => a.id === s.airportId)
+      return {
+        code: airport?.code || "",
+        name: airport?.name || "",
+      }
+    })
     await onConfirm({
       ...data,
+      stopoverAirports: formattedStopovers,
       seatCount: Number(data.seatCount),
       availableSeatCount: Number(data.availableSeatCount),
       flightPrice: Number(data.flightPrice),
@@ -91,20 +112,25 @@ export function EditScheduleDialogForm({
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <EditScheduleFormFieldsMain
-            control={form.control}
+            control={control}
             airports={airports}
             companies={companies}
           />
           <EditScheduleFormFieldsRest
-            control={form.control}
+            control={control}
+            setValue={setValue}
+            getValues={getValues}
+            airports={airports}
             statuses={statuses}
+            terminals={terminals}
+            aircrafts={aircrafts}
             stopovers={stopovers}
           />
         </div>
 
         <Controller
           name="hasArrived"
-          control={form.control}
+          control={control}
           render={({ field }) => (
             <div className="flex items-center space-x-2 py-2">
               <Checkbox

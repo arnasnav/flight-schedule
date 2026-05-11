@@ -1,34 +1,35 @@
 "use client"
 
-import { Controller } from "react-hook-form"
-import type { Control, UseFieldArrayReturn } from "react-hook-form"
+import type { Control, UseFieldArrayReturn, UseFormGetValues, UseFormSetValue } from "react-hook-form"
 
-import { Button } from "@/components/ui/button"
-import { Field, FieldError, FieldLabel } from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
+import type { IAircraft } from "@/models/aircraft-model"
 import type { IAirport } from "@/models/airport-model"
 import type { IStatus } from "@/models/status-model"
+import type { ITerminal } from "@/models/terminal-model"
 
 import type { AddScheduleFormValues } from "./schedule-form-schema"
+import { ScheduleFormTechnicalFields } from "./schedule-form-technical-fields"
+import { ScheduleStopoverAirportsFields } from "./schedule-stopover-airports-fields"
 
 type IProps = {
   control: Control<AddScheduleFormValues>
+  setValue: UseFormSetValue<AddScheduleFormValues>
+  getValues: UseFormGetValues<AddScheduleFormValues>
   airports: IAirport[]
   statuses: IStatus[]
+  terminals: ITerminal[]
+  aircrafts: IAircraft[]
   stopovers: UseFieldArrayReturn<AddScheduleFormValues, "stopoverAirports">
 }
 
 export function AddScheduleFormFieldsRest({
   control,
+  setValue,
+  getValues,
   airports,
   statuses,
+  terminals,
+  aircrafts,
   stopovers,
 }: IProps) {
   return (
@@ -38,170 +39,19 @@ export function AddScheduleFormFieldsRest({
           Skrydžio būsena ir techninė informacija
         </p>
       </div>
-      <Controller
-        name="flightStatus"
+      <ScheduleFormTechnicalFields
         control={control}
-        render={({ field, fieldState }) => (
-          <Field data-invalid={fieldState.invalid}>
-            <FieldLabel>Skrydžio būsena</FieldLabel>
-            <Select value={field.value} onValueChange={field.onChange}>
-              <SelectTrigger>
-                <SelectValue placeholder="Pasirinkite būseną" />
-              </SelectTrigger>
-              <SelectContent>
-                {statuses.map((status) => (
-                  <SelectItem key={status.id} value={status.name}>
-                    {status.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <FieldError errors={[fieldState.error]} />
-          </Field>
-        )}
+        setValue={setValue}
+        getValues={getValues}
+        statuses={statuses}
+        terminals={terminals}
+        aircrafts={aircrafts}
       />
-      <Controller
-        name="terminal"
+      <ScheduleStopoverAirportsFields
         control={control}
-        render={({ field, fieldState }) => (
-          <Field data-invalid={fieldState.invalid}>
-            <FieldLabel>Terminalas</FieldLabel>
-            <Input {...field} placeholder="pvz. T1" />
-            <FieldError errors={[fieldState.error]} />
-          </Field>
-        )}
+        stopovers={stopovers}
+        airports={airports}
       />
-      <Controller
-        name="gate"
-        control={control}
-        render={({ field, fieldState }) => (
-          <Field data-invalid={fieldState.invalid}>
-            <FieldLabel>Vartai</FieldLabel>
-            <Input {...field} placeholder="pvz. A12" />
-            <FieldError errors={[fieldState.error]} />
-          </Field>
-        )}
-      />
-      <Controller
-        name="aircraftType"
-        control={control}
-        render={({ field, fieldState }) => (
-          <Field data-invalid={fieldState.invalid}>
-            <FieldLabel>Lėktuvo tipas</FieldLabel>
-            <Input {...field} placeholder="pvz. Boeing 737-800" />
-            <FieldError errors={[fieldState.error]} />
-          </Field>
-        )}
-      />
-      <Controller
-        name="seatCount"
-        control={control}
-        render={({ field, fieldState }) => (
-          <Field data-invalid={fieldState.invalid}>
-            <FieldLabel>Vietų skaičius</FieldLabel>
-            <Input {...field} type="number" placeholder="pvz. 189" />
-            <FieldError errors={[fieldState.error]} />
-          </Field>
-        )}
-      />
-      <Controller
-        name="availableSeatCount"
-        control={control}
-        render={({ field, fieldState }) => (
-          <Field data-invalid={fieldState.invalid}>
-            <FieldLabel>Laisvų vietų skaičius</FieldLabel>
-            <Input {...field} type="number" placeholder="pvz. 42" />
-            <FieldError errors={[fieldState.error]} />
-          </Field>
-        )}
-      />
-      <Controller
-        name="flightPrice"
-        control={control}
-        render={({ field, fieldState }) => (
-          <Field data-invalid={fieldState.invalid}>
-            <FieldLabel>Skrydžio kaina</FieldLabel>
-            <Input
-              {...field}
-              type="number"
-              step="0.01"
-              placeholder="pvz. 129.99"
-            />
-            <FieldError errors={[fieldState.error]} />
-          </Field>
-        )}
-      />
-      <Controller
-        name="baggageLimit"
-        control={control}
-        render={({ field, fieldState }) => (
-          <Field data-invalid={fieldState.invalid}>
-            <FieldLabel>Bagažo limitas</FieldLabel>
-            <Input {...field} placeholder="pvz. 20" />
-            <FieldError errors={[fieldState.error]} />
-          </Field>
-        )}
-      />
-      <div className="col-span-2 space-y-2">
-        <div className="flex items-center justify-between">
-          <FieldLabel>Tarpiniai uostai</FieldLabel>
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={() => stopovers.append({ airportId: "" })}
-          >
-            Pridėti
-          </Button>
-        </div>
-
-        {stopovers.fields.length === 0 && (
-          <p className="text-sm text-muted-foreground">
-            Tarpinių uostų nepridėta.
-          </p>
-        )}
-
-        {stopovers.fields.map((field, index) => (
-          <div
-            key={field.id}
-            className="grid grid-cols-[1fr_auto] gap-2 items-end"
-          >
-            <Controller
-              name={`stopoverAirports.${index}.airportId`}
-              control={control}
-              render={({ field: inputField, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <Select
-                    value={inputField.value}
-                    onValueChange={inputField.onChange}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Pasirinkite tarpinį oro uostą" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {airports.map((a) => (
-                        <SelectItem key={a.id} value={a.id!}>
-                          {a.name} ({a.code})
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FieldError errors={[fieldState.error]} />
-                </Field>
-              )}
-            />
-
-            <Button
-              type="button"
-              variant="destructive"
-              size="sm"
-              onClick={() => stopovers.remove(index)}
-            >
-              Ištrinti
-            </Button>
-          </div>
-        ))}
-      </div>
     </>
   )
 }

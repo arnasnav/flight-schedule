@@ -163,8 +163,7 @@ export function createEditScheduleFormSchema(
       baggageLimit: z.string().trim().min(1),
       stopoverAirports: z.array(
         z.object({
-          code: z.string().trim().min(1, "Įveskite kodą"),
-          name: z.string().trim().min(1, "Įveskite pavadinimą"),
+          airportId: z.string().min(1, "Pasirinkite oro uostą"),
         }),
       ),
       hasArrived: z.boolean(),

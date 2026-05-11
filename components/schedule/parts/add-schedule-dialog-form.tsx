@@ -14,9 +14,11 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import type { IAirport } from "@/models/airport-model"
+import type { IAircraft } from "@/models/aircraft-model"
 import type { ICompany } from "@/models/company-model"
 import type { ISchedule } from "@/models/schedule-model"
 import type { IStatus } from "@/models/status-model"
+import type { ITerminal } from "@/models/terminal-model"
 
 import { AddScheduleFormFieldsMain } from "./add-schedule-form-fields-main"
 import { AddScheduleFormFieldsRest } from "./add-schedule-form-fields-rest"
@@ -32,6 +34,8 @@ type IProps = {
   companies: ICompany[]
   existingSchedules: ISchedule[]
   statuses: IStatus[]
+  terminals: ITerminal[]
+  aircrafts: IAircraft[]
 }
 
 export function AddScheduleDialogForm({
@@ -41,6 +45,8 @@ export function AddScheduleDialogForm({
   companies,
   existingSchedules,
   statuses,
+  terminals,
+  aircrafts,
 }: IProps) {
   const formSchema = createAddScheduleFormSchema(existingSchedules)
 
@@ -71,8 +77,10 @@ export function AddScheduleDialogForm({
     },
   })
 
+  const { control, setValue, getValues } = form
+
   const stopovers = useFieldArray({
-    control: form.control,
+    control,
     name: "stopoverAirports",
   })
 
@@ -110,21 +118,25 @@ export function AddScheduleDialogForm({
       >
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <AddScheduleFormFieldsMain
-            control={form.control}
+            control={control}
             airports={airports}
             companies={companies}
           />
           <AddScheduleFormFieldsRest
-            control={form.control}
+            control={control}
+            setValue={setValue}
+            getValues={getValues}
             airports={airports}
             statuses={statuses}
+            terminals={terminals}
+            aircrafts={aircrafts}
             stopovers={stopovers}
           />
         </div>
 
         <Controller
           name="hasArrived"
-          control={form.control}
+          control={control}
           render={({ field }) => (
             <div className="flex items-center space-x-2">
               <Checkbox
