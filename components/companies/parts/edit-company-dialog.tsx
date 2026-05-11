@@ -25,12 +25,9 @@ type IProps = {
   existingNames: string[]
 }
 
-export function EditCompanyDialog({
-  company,
-  onClose,
-  onConfirm,
-  existingNames,
-}: IProps) {
+export function EditCompanyDialog(props: IProps) {
+  const { company, onClose, onConfirm, existingNames } = props
+
   const formSchema = z.object({
     name: z
       .string()

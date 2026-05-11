@@ -26,14 +26,16 @@ type IProps = {
   aircrafts: IAircraft[]
 }
 
-export function Schedule({
-  initialSchedules,
-  airports,
-  companies,
-  statuses,
-  terminals,
-  aircrafts,
-}: IProps) {
+export function Schedule(props: IProps) {
+  const {
+    initialSchedules,
+    airports,
+    companies,
+    statuses,
+    terminals,
+    aircrafts,
+  } = props
+
   const [schedules, setSchedules] = useState<ISchedule[]>(initialSchedules)
 
   const [isAddOpen, setIsAddOpen] = useState(false)

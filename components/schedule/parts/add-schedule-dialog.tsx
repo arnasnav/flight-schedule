@@ -24,16 +24,18 @@ type IProps = {
   aircrafts: IAircraft[]
 }
 
-export function AddScheduleDialog({
-  onClose,
-  onConfirm,
-  airports,
-  companies,
-  existingSchedules,
-  statuses,
-  terminals,
-  aircrafts,
-}: IProps) {
+export function AddScheduleDialog(props: IProps) {
+  const {
+    onClose,
+    onConfirm,
+    airports,
+    companies,
+    existingSchedules,
+    statuses,
+    terminals,
+    aircrafts,
+  } = props
+
   return (
     <Dialog open={true} onOpenChange={onClose}>
       <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">

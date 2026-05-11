@@ -15,7 +15,9 @@ type IProps = {
   children: ReactNode
 }
 
-export default function RootLayout({ children }: IProps) {
+export default function RootLayout(props: IProps) {
+  const { children } = props
+
   return (
     <html lang="lt">
       <body className="min-h-screen bg-background">

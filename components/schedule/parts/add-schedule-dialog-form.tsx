@@ -38,16 +38,18 @@ type IProps = {
   aircrafts: IAircraft[]
 }
 
-export function AddScheduleDialogForm({
-  onClose,
-  onConfirm,
-  airports,
-  companies,
-  existingSchedules,
-  statuses,
-  terminals,
-  aircrafts,
-}: IProps) {
+export function AddScheduleDialogForm(props: IProps) {
+  const {
+    onClose,
+    onConfirm,
+    airports,
+    companies,
+    existingSchedules,
+    statuses,
+    terminals,
+    aircrafts,
+  } = props
+
   const formSchema = createAddScheduleFormSchema(existingSchedules)
 
   const form = useForm<AddScheduleFormValues>({

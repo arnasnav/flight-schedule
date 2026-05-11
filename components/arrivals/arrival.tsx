@@ -15,11 +15,13 @@ type IProps = {
   companies: ICompany[]
 }
 
-export function Arrivals({
-  schedules: initialSchedules,
-  airports,
-  companies,
-}: IProps) {
+export function Arrivals(props: IProps) {
+  const {
+    schedules: initialSchedules,
+    airports,
+    companies,
+  } = props
+
   const [schedules, setSchedules] = useState<ISchedule[]>(initialSchedules)
   const [searchQuery, setSearchQuery] = useState("")
 

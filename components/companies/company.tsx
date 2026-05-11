@@ -15,7 +15,8 @@ type IProps = {
   companies: ICompany[]
 }
 
-export function Companies({ companies: initialCompanies }: IProps) {
+export function Companies(props: IProps) {
+  const { companies: initialCompanies } = props
   const [companies, setCompanies] = useState<ICompany[]>(initialCompanies)
   const [deleteId, setDeleteId] = useState<string | undefined>(undefined)
   const [editingCompany, setEditingCompany] = useState<ICompany | undefined>(

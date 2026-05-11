@@ -16,7 +16,8 @@ type IProps = {
   airports: IAirport[]
 }
 
-export function Airports({ airports: initialAirports }: IProps) {
+export function Airports(props: IProps) {
+  const { airports: initialAirports } = props
   const [airports, setAirports] = useState<IAirport[]>(initialAirports)
   const [deleteId, setDeleteId] = useState<string | undefined>(undefined)
   const [editingAirport, setEditingAirport] = useState<IAirport | undefined>(

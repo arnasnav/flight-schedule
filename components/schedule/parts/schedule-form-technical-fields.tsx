@@ -32,14 +32,16 @@ type IProps = {
   aircrafts: IAircraft[]
 }
 
-export function ScheduleFormTechnicalFields({
-  control,
-  setValue,
-  getValues,
-  statuses,
-  terminals,
-  aircrafts,
-}: IProps) {
+export function ScheduleFormTechnicalFields(props: IProps) {
+  const {
+    control,
+    setValue,
+    getValues,
+    statuses,
+    terminals,
+    aircrafts,
+  } = props
+
   const terminal = useWatch({ control, name: "terminal" })
   const selectedTerminal = terminals.find((t) => t.name === terminal)
   const gates = selectedTerminal?.gates ?? []

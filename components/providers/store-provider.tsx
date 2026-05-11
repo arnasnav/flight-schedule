@@ -13,7 +13,9 @@ const StoreContext = createContext<IAppStoreApi | null>(null)
 
 const store = appStore()
 
-export function StoreProvider({ children }: { children: ReactNode }) {
+export function StoreProvider(props: { children: ReactNode }) {
+  const { children } = props
+
   return <StoreContext.Provider value={store}>{children}</StoreContext.Provider>
 }
 

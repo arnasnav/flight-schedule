@@ -17,7 +17,8 @@ type IProps = {
   onConfirm: () => void
 }
 
-export function DeleteCompanyDialog({ onClose, onConfirm }: IProps) {
+export function DeleteCompanyDialog(props: IProps) {
+  const { onClose, onConfirm } = props
   const handleConfirm = () => {
     onConfirm()
 

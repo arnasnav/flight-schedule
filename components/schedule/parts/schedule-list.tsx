@@ -13,13 +13,9 @@ type IProps = {
   onDelete: (id: string) => void
 }
 
-export function ScheduleList({
-  schedules,
-  airports,
-  companies,
-  onEdit,
-  onDelete,
-}: IProps) {
+export function ScheduleList(props: IProps) {
+  const { schedules, airports, companies, onEdit, onDelete } = props
+
   const companyMap = Object.fromEntries(companies.map((c) => [c.id, c]))
 
   const airportMap = Object.fromEntries(airports.map((a) => [a.id, a]))

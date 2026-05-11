@@ -14,7 +14,8 @@ type IProps = {
   item: INav
 }
 
-export function NavDropdown({ item }: IProps) {
+export function NavDropdown(props: IProps) {
+  const { item } = props
   return (
     <NavigationMenu>
       <NavigationMenuList>

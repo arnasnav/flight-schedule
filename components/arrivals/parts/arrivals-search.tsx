@@ -9,7 +9,8 @@ type IProps = {
   onChange: (val: string) => void
 }
 
-export function ArrivalsSearch({ value, onChange }: IProps) {
+export function ArrivalsSearch(props: IProps) {
+  const { value, onChange } = props
   return (
     <Card className="shadow-sm">
       <CardHeader>

@@ -21,11 +21,9 @@ type IProps = {
   airports: IAirport[]
 }
 
-export function ScheduleStopoverAirportsFields({
-  control,
-  stopovers,
-  airports,
-}: IProps) {
+export function ScheduleStopoverAirportsFields(props: IProps) {
+  const { control, stopovers, airports } = props
+
   return (
     <div className="col-span-2 space-y-2">
       <div className="flex items-center justify-between">

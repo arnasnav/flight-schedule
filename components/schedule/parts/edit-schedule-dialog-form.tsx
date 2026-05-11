@@ -39,17 +39,19 @@ type IProps = {
   aircrafts: IAircraft[]
 }
 
-export function EditScheduleDialogForm({
-  schedule,
-  onClose,
-  onConfirm,
-  airports,
-  companies,
-  existingSchedules,
-  statuses,
-  terminals,
-  aircrafts,
-}: IProps) {
+export function EditScheduleDialogForm(props: IProps) {
+  const {
+    schedule,
+    onClose,
+    onConfirm,
+    airports,
+    companies,
+    existingSchedules,
+    statuses,
+    terminals,
+    aircrafts,
+  } = props
+
   const scheduleId = schedule.id ?? ""
   const formSchema = createEditScheduleFormSchema(scheduleId, existingSchedules)
 

@@ -10,7 +10,8 @@ type IProps = {
   onEdit: (company: ICompany) => void
 }
 
-export function CompanyList({ companies, onDelete, onEdit }: IProps) {
+export function CompanyList(props: IProps) {
+  const { companies, onDelete, onEdit } = props
   if (companies.length === 0) {
     return (
       <div className="p-4 text-sm text-muted-foreground">

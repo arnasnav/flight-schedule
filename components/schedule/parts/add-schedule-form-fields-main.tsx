@@ -23,11 +23,9 @@ type IProps = {
   companies: ICompany[]
 }
 
-export function AddScheduleFormFieldsMain({
-  control,
-  airports,
-  companies,
-}: IProps) {
+export function AddScheduleFormFieldsMain(props: IProps) {
+  const { control, airports, companies } = props
+
   return (
     <>
       <div className="col-span-full pt-1">

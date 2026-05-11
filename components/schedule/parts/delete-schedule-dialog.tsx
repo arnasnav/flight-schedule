@@ -17,7 +17,8 @@ type IProps = {
   onConfirm: () => void
 }
 
-export function DeleteScheduleDialog({ onClose, onConfirm }: IProps) {
+export function DeleteScheduleDialog(props: IProps) {
+  const { onClose, onConfirm } = props
   const handleConfirm = () => {
     onConfirm()
     toast.success("Skrydis sėkmingai ištrintas")

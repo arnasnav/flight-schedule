@@ -24,11 +24,9 @@ type IProps = {
   existingNames: string[]
 }
 
-export function AddAirportDialog({
-  onClose,
-  onConfirm,
-  existingNames,
-}: IProps) {
+export function AddAirportDialog(props: IProps) {
+  const { onClose, onConfirm, existingNames } = props
+
   const formSchema = z.object({
     name: z
       .string()

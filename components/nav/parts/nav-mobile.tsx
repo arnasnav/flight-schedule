@@ -5,7 +5,8 @@ type IProps = {
   onToggle: () => void
 }
 
-export function NavMobileToggle({ onToggle }: IProps) {
+export function NavMobileToggle(props: IProps) {
+  const { onToggle } = props
   return (
     <button
       onClick={onToggle}

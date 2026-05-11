@@ -10,7 +10,8 @@ type IProps = {
   onEdit: (airport: IAirport) => void
 }
 
-export function AirportList({ airports, onDelete, onEdit }: IProps) {
+export function AirportList(props: IProps) {
+  const { airports, onDelete, onEdit } = props
   if (airports.length === 0) {
     return (
       <div className="p-12 text-center text-sm text-muted-foreground">

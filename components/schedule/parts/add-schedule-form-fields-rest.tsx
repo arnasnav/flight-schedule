@@ -22,16 +22,18 @@ type IProps = {
   stopovers: UseFieldArrayReturn<AddScheduleFormValues, "stopoverAirports">
 }
 
-export function AddScheduleFormFieldsRest({
-  control,
-  setValue,
-  getValues,
-  airports,
-  statuses,
-  terminals,
-  aircrafts,
-  stopovers,
-}: IProps) {
+export function AddScheduleFormFieldsRest(props: IProps) {
+  const {
+    control,
+    setValue,
+    getValues,
+    airports,
+    statuses,
+    terminals,
+    aircrafts,
+    stopovers,
+  } = props
+
   return (
     <>
       <div className="col-span-full pt-2">

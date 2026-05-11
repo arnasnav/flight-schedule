@@ -14,12 +14,9 @@ type IProps = {
   onToggleArrival: (flight: ISchedule) => void
 }
 
-export function ArrivalsList({
-  flights,
-  airports,
-  companies,
-  onToggleArrival,
-}: IProps) {
+export function ArrivalsList(props: IProps) {
+  const { flights, airports, companies, onToggleArrival } = props
+
   const getAirportName = (id: string) =>
     airports.find((a) => a.id === id)?.name
 

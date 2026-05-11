@@ -7,7 +7,8 @@ type IProps = {
   isVisible: boolean
 }
 
-export function NavLinks({ menu, isVisible }: IProps) {
+export function NavLinks(props: IProps) {
+  const { menu, isVisible } = props
   return (
     <div
       className={`w-full md:block md:w-auto ${isVisible ? "" : "hidden"}`}
