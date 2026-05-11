@@ -62,10 +62,6 @@ export function AddCompanyDialog(props: IProps) {
     props.onClose()
   }
 
-  React.useEffect(() => {
-    form.reset()
-  }, [form])
-
   return (
     <Dialog open={true} onOpenChange={props.onClose}>
       <DialogContent>

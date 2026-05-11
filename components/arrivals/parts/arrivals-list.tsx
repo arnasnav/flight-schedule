@@ -16,10 +16,10 @@ type IProps = {
 
 export function ArrivalsList(props: IProps) {
   const getAirportName = (id: string) =>
-    props.airports.find((a) => a.id === id)?.name || "Nėra"
+    props.airports.find((a) => a.id === id)?.name
 
   const getCompanyName = (id: string) =>
-    props.companies.find((c) => c.id === id)?.name || "Nėra"
+    props.companies.find((c) => c.id === id)?.name
 
   if (props.flights.length === 0) {
     return (

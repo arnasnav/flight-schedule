@@ -45,7 +45,7 @@ export function AddAirportDialog(props: IProps) {
       .string()
       .trim()
       .min(2, "Kodas per trumpas.")
-      .max(2, "Kodas per ilgas."),
+      .max(5, "Kodas per ilgas."),
   })
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -62,10 +62,6 @@ export function AddAirportDialog(props: IProps) {
     form.reset()
     props.onClose()
   }
-
-  React.useEffect(() => {
-    form.reset()
-  }, [form])
 
   return (
     <Dialog open={true} onOpenChange={props.onClose}>

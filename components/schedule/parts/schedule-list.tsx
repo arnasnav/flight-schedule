@@ -46,7 +46,7 @@ export function ScheduleList(props: IProps) {
           const arrivalAirport = airportMap[s.arrivalAirportId]
 
           return (
-            <tr key={(s as any)._id ?? s.id} className="hover:bg-slate-50/50 transition-colors">
+            <tr key={s.id} className="hover:bg-slate-50/50 transition-colors">
               <td className="px-6 py-4 font-medium text-slate-900 text-xs space-y-1">
                 <div>Skrydžio ID: {s.flightId}</div>
                 <div>Reiso nr.: {s.flightNumber}</div>

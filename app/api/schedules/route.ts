@@ -29,14 +29,3 @@ export async function PUT(request: Request) {
 
   return Response.json({ message: "Updated successfully" })
 }
-
-export async function DELETE(
-  request: Request,
-) {
-  const body = await request.json()
-
-  const scheduleService = new ScheduleService()
-  await scheduleService.deleteSchedule(body)
-
-  return Response.json({ message: "Deleted successfully" })
-}

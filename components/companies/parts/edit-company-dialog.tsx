@@ -40,10 +40,10 @@ export function EditCompanyDialog(props: IProps) {
           }
 
           return !props.existingNames.some(
-            (name) => name.toLowerCase() === val.toLowerCase()
+            (name) => name.toLowerCase() === val.toLowerCase(),
           )
         },
-        { message: "Kompanija tokiu pavadinimu jau egzistuoja." }
+        { message: "Kompanija tokiu pavadinimu jau egzistuoja." },
       ),
     code: z
       .string()
@@ -55,14 +55,10 @@ export function EditCompanyDialog(props: IProps) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      code: "",
+      name: props.company.name,
+      code: props.company.code,
     },
   })
-
-  React.useEffect(() => {
-    form.reset(props.company)
-  }, [props.company, form])
 
   function onSubmit(data: z.infer<typeof formSchema>) {
     props.onConfirm(data.name, data.code)

@@ -41,30 +41,26 @@ export function EditAirportDialog(props: IProps) {
           }
 
           return !props.existingNames.some(
-            (name) => name.toLowerCase() === val.toLowerCase()
+            (name) => name.toLowerCase() === val.toLowerCase(),
           )
         },
-        { message: "Oro uostas tokiu pavadinimu jau egzistuoja." }
+        { message: "Oro uostas tokiu pavadinimu jau egzistuoja." },
       ),
 
     code: z
       .string()
       .trim()
       .min(2, "Kodas per trumpas.")
-      .max(2, "Kodas per ilgas."),
+      .max(5, "Kodas per ilgas."),
   })
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: "",
-      code: "",
+      name: props.airport.name,
+      code: props.airport.code,
     },
   })
-
-  React.useEffect(() => {
-    form.reset(props.airport)
-  }, [props.airport, form])
 
   const handleSubmit = (data: z.infer<typeof formSchema>) => {
     props.onConfirm(data.name, data.code)

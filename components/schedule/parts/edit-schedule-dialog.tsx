@@ -2,14 +2,8 @@
 
 import * as React from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
-import {
-  Controller,
-  useFieldArray,
-  useForm,
-} from "react-hook-form"
-import type {
-  SubmitHandler,
-} from "react-hook-form"
+import { Controller, useFieldArray, useForm } from "react-hook-form"
+import type { SubmitHandler } from "react-hook-form"
 import * as z from "zod"
 import { isBefore, parseISO } from "date-fns"
 
@@ -65,9 +59,9 @@ export function EditScheduleDialog(props: IProps) {
             !props.existingSchedules.some(
               (s) =>
                 s.id !== props.schedule.id &&
-                s.flightNumber.toLowerCase() === val.toLowerCase()
+                s.flightNumber.toLowerCase() === val.toLowerCase(),
             ),
-          { message: "Šis reiso numeris jau egzistuoja" }
+          { message: "Šis reiso numeris jau egzistuoja" },
         ),
       departureTime: z.string().min(1, "Pasirinkite išvykimo laiką"),
       arrivalAirportId: z.string().min(1, "Pasirinkite atvykimo oro uostą"),
@@ -103,7 +97,7 @@ export function EditScheduleDialog(props: IProps) {
         z.object({
           code: z.string().trim().min(1, "Įveskite kodą"),
           name: z.string().trim().min(1, "Įveskite pavadinimą"),
-        })
+        }),
       ),
       hasArrived: z.boolean(),
     })
@@ -120,35 +114,32 @@ export function EditScheduleDialog(props: IProps) {
       {
         message: "Išvykimo laikas turi būti ankstesnis už atvykimo",
         path: ["scheduledArrivalTime"],
-      }
+      },
     )
     .refine(
       (data) => Number(data.availableSeatCount) <= Number(data.seatCount),
       {
         message: "Laisvų vietų negali būti daugiau nei vietų skaičius",
         path: ["availableSeatCount"],
-      }
+      },
     )
 
   type FormValues = z.infer<typeof formSchema>
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
-  })
-  const stopovers = useFieldArray({
-    control: form.control,
-    name: "stopoverAirports",
-  })
-
-  React.useEffect(() => {
-    form.reset({
+    defaultValues: {
       ...props.schedule,
       seatCount: String(props.schedule.seatCount ?? 0),
       availableSeatCount: String(props.schedule.availableSeatCount ?? 0),
       flightPrice: String(props.schedule.flightPrice ?? 0),
       stopoverAirports: props.schedule.stopoverAirports ?? [],
-    })
-  }, [props.schedule, form])
+    },
+  })
+  const stopovers = useFieldArray({
+    control: form.control,
+    name: "stopoverAirports",
+  })
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     await props.onConfirm({
