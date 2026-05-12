@@ -1,5 +1,4 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
 import type { IAirport } from "@/models/airport-model"
 import { AirportSelect } from "./airport-select"
 
@@ -12,7 +11,6 @@ type IProps = {
   airports: IAirport[]
   destinationAirportId: string
   onDestinationChange: (value: string) => void
-  onSubmit: () => void
   transitAirports: TransitAirport[]
   hasQueried: boolean
 }
@@ -22,7 +20,6 @@ export function TransitAirportsQuery(props: IProps) {
     airports,
     destinationAirportId,
     onDestinationChange,
-    onSubmit,
     transitAirports,
     hasQueried,
   } = props
@@ -33,15 +30,12 @@ export function TransitAirportsQuery(props: IProps) {
         <CardTitle>Per kokį oro uostą galima įvykdyti tranzitą?</CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
-        <div className="flex gap-2">
-          <AirportSelect
-            value={destinationAirportId}
-            onChange={onDestinationChange}
-            airports={airports}
-            placeholder="Pasirinkite tikslinę vietą"
-          />
-          <Button onClick={onSubmit}>Vykdyti</Button>
-        </div>
+        <AirportSelect
+          value={destinationAirportId}
+          onChange={onDestinationChange}
+          airports={airports}
+          placeholder="Pasirinkite tikslinę vietą"
+        />
         {hasQueried &&
           (transitAirports.length === 0 ? (
             <p className="text-sm text-muted-foreground">Rezultatų nėra.</p>

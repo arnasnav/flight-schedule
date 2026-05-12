@@ -12,6 +12,7 @@ type IProps = {
   onChange: (value: string) => void
   airports: IAirport[]
   placeholder?: string
+  disabled?: boolean
 }
 
 export function AirportSelect(props: IProps) {
@@ -20,10 +21,15 @@ export function AirportSelect(props: IProps) {
     onChange,
     airports,
     placeholder = "Pasirinkite oro uostą",
+    disabled,
   } = props
 
   return (
-    <Select value={value} onValueChange={onChange}>
+    <Select
+      value={value || undefined}
+      onValueChange={onChange}
+      disabled={disabled}
+    >
       <SelectTrigger>
         <SelectValue placeholder={placeholder} />
       </SelectTrigger>

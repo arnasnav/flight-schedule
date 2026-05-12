@@ -11,13 +11,18 @@ type IProps = {
   value: string
   onChange: (value: string) => void
   companies: ICompany[]
+  disabled?: boolean
 }
 
 export function CompanySelect(props: IProps) {
-  const { value, onChange, companies } = props
+  const { value, onChange, companies, disabled } = props
 
   return (
-    <Select value={value} onValueChange={onChange}>
+    <Select
+      value={value || undefined}
+      onValueChange={onChange}
+      disabled={disabled}
+    >
       <SelectTrigger>
         <SelectValue placeholder="Pasirinkite kompaniją" />
       </SelectTrigger>

@@ -21,12 +21,15 @@ export function TransitAirports(props: IProps) {
   const [transitAirports, setTransitAirports] = useState<TransitAirport[]>([])
   const [hasQueried, setHasQueried] = useState(false)
 
-  const handleSubmit = async () => {
-    if (!destinationAirportId) return
+  const handleDestinationChange = async (id: string) => {
+    setDestinationAirportId(id)
+    if (!id) {
+      setTransitAirports([])
+      setHasQueried(false)
+      return
+    }
     const data = await getApi<TransitAirport[]>(
-      `/api/transit-airports?destinationAirportId=${encodeURIComponent(
-        destinationAirportId
-      )}`
+      `/api/transit-airports?destinationAirportId=${encodeURIComponent(id)}`
     )
     setTransitAirports(data ?? [])
     setHasQueried(true)
@@ -44,10 +47,8 @@ export function TransitAirports(props: IProps) {
         airports={airports}
         destinationAirportId={destinationAirportId}
         onDestinationChange={(id) => {
-          setDestinationAirportId(id)
-          setHasQueried(false)
+          void handleDestinationChange(id)
         }}
-        onSubmit={handleSubmit}
         transitAirports={transitAirports}
         hasQueried={hasQueried}
       />
