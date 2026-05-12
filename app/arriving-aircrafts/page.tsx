@@ -1,8 +1,8 @@
 import type { IAirport } from "@/models/airport-model"
 import { getApi } from "@/utils/server-api"
-import { FlightsFromAirportPage } from "@/components/queries/pages/flights-from-airport-page"
+import { ArrivingAircrafts } from "@/components/queries/arriving-aircrafts"
 
 export default async function Page() {
   const airports = await getApi<IAirport[]>("/api/airports")
-  return <FlightsFromAirportPage airports={airports ?? []} />
+  return <ArrivingAircrafts airports={airports ?? []} />
 }

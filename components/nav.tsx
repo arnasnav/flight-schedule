@@ -9,7 +9,7 @@ import { NavLogo } from "@/components/nav/parts/nav-logo"
 
 type IProps = { menu: INav[] }
 
-export function NavPage(props: IProps) {
+export function Nav(props: IProps) {
   const { menu } = props
   const [isVisible, setIsVisible] = useState(false)
 

@@ -13,8 +13,8 @@ type IProps = {
   destinationAirportId: string
   onDestinationChange: (value: string) => void
   onSubmit: () => void
-  isLoading: boolean
   transitAirports: TransitAirport[]
+  hasQueried: boolean
 }
 
 export function TransitAirportsQuery(props: IProps) {
@@ -23,16 +23,9 @@ export function TransitAirportsQuery(props: IProps) {
     destinationAirportId,
     onDestinationChange,
     onSubmit,
-    isLoading,
     transitAirports,
+    hasQueried,
   } = props
-
-  const isDisabled = !destinationAirportId || isLoading
-  const buttonLabel = isLoading ? "Vykdoma..." : "Vykdyti"
-  const resultText =
-    transitAirports.length > 0
-      ? transitAirports.map((airport) => `${airport.name} (${airport.code})`).join(", ")
-      : "Rezultatų nėra."
 
   return (
     <Card>
@@ -47,11 +40,31 @@ export function TransitAirportsQuery(props: IProps) {
             airports={airports}
             placeholder="Pasirinkite tikslinę vietą"
           />
-          <Button onClick={onSubmit} disabled={isDisabled}>
-            {buttonLabel}
-          </Button>
+          <Button onClick={onSubmit}>Vykdyti</Button>
         </div>
-        <p className="text-sm">{resultText}</p>
+        {hasQueried &&
+          (transitAirports.length === 0 ? (
+            <p className="text-sm text-muted-foreground">Rezultatų nėra.</p>
+          ) : (
+            <div className="overflow-x-auto rounded-md border">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="bg-muted/50 text-left">
+                    <th className="px-3 py-2 font-medium">Oro uostas</th>
+                    <th className="px-3 py-2 font-medium">Kodas</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {transitAirports.map((airport) => (
+                    <tr key={airport.code} className="border-t">
+                      <td className="px-3 py-2">{airport.name}</td>
+                      <td className="px-3 py-2">{airport.code}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ))}
       </CardContent>
     </Card>
   )

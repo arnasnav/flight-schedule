@@ -21,9 +21,7 @@ export function DeleteCompanyDialog(props: IProps) {
   const { onClose, onConfirm } = props
   const handleConfirm = () => {
     onConfirm()
-
     toast.success("Kompanija sėkmingai ištrinta")
-
     onClose()
   }
 

@@ -1,4 +1,4 @@
-import { NavPage } from "@/components/nav"
+import { Nav } from "@/components/nav"
 import type { INav } from "@/types/nav-t"
 
 const menu: INav[] = [
@@ -14,11 +14,11 @@ const menu: INav[] = [
     title: "Užklausos",
     slug: "/queries",
     children: [
-      { title: "Atskrendantys lėktuvai", slug: "/queries/arriving-aircrafts" },
-      { title: "Išskrendantys lėktuvai", slug: "/queries/departing-aircrafts" },
-      { title: "Tranzito oro uostai", slug: "/queries/transit-airports" },
-      { title: "Skrydžiai iš oro uosto", slug: "/queries/flights-from-airport" },
-      { title: "Skrydžiai pagal kompaniją", slug: "/queries/flights-by-company" },
+      { title: "Atskrendantys lėktuvai", slug: "/arriving-aircrafts" },
+      { title: "Išskrendantys lėktuvai", slug: "/departing-aircrafts" },
+      { title: "Tranzito oro uostai", slug: "/transit-airports" },
+      { title: "Skrydžiai iš oro uosto", slug: "/flights-from-airport" },
+      { title: "Skrydžiai pagal kompaniją", slug: "/flights-by-company" },
     ],
   },
   {
@@ -34,7 +34,7 @@ const menu: INav[] = [
 export async function Header() {
   return (
     <header className="border-b border-gray-400 p-1 mb-5 grid grid-flow-col gap-x-4 justify-between items-center">
-      <NavPage menu={menu} />
+      <Nav menu={menu} />
     </header>
   )
 }

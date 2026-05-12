@@ -8,17 +8,13 @@ type IProps = {
   airportId: string
   onAirportChange: (value: string) => void
   onSubmit: () => void
-  isLoading: boolean
   aircrafts: string[]
+  hasQueried: boolean
 }
 
 export function ArrivingAircraftsQuery(props: IProps) {
-  const { airports, airportId, onAirportChange, onSubmit, isLoading, aircrafts } =
+  const { airports, airportId, onAirportChange, onSubmit, aircrafts, hasQueried } =
     props
-
-  const isDisabled = !airportId || isLoading
-  const buttonLabel = isLoading ? "Vykdoma..." : "Vykdyti"
-  const resultText = aircrafts.length > 0 ? aircrafts.join(", ") : "Rezultatų nėra."
 
   return (
     <Card>
@@ -32,11 +28,29 @@ export function ArrivingAircraftsQuery(props: IProps) {
             onChange={onAirportChange}
             airports={airports}
           />
-          <Button onClick={onSubmit} disabled={isDisabled}>
-            {buttonLabel}
-          </Button>
+          <Button onClick={onSubmit}>Vykdyti</Button>
         </div>
-        <p className="text-sm">{resultText}</p>
+        {hasQueried &&
+          (aircrafts.length === 0 ? (
+            <p className="text-sm text-muted-foreground">Rezultatų nėra.</p>
+          ) : (
+            <div className="overflow-x-auto rounded-md border">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="bg-muted/50 text-left">
+                    <th className="px-3 py-2 font-medium">Lėktuvo tipas</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {aircrafts.map((aircraft) => (
+                    <tr key={aircraft} className="border-t">
+                      <td className="px-3 py-2">{aircraft}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ))}
       </CardContent>
     </Card>
   )

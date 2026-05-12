@@ -11,13 +11,6 @@ export async function GET(request: Request) {
   const searchQuery = new URL(request.url).searchParams
   const destinationAirportId = searchQuery.get("destinationAirportId")
 
-  if (!destinationAirportId) {
-    return NextResponse.json(
-      { message: "Missing required query parameter: destinationAirportId" },
-      { status: 400 }
-    )
-  }
-
   await connectMongoose()
   const schedules = await Schedule.find(
     { arrivalAirportId: destinationAirportId },

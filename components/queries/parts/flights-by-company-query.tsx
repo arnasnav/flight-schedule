@@ -1,25 +1,31 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import type { IAirport } from "@/models/airport-model"
 import type { ICompany } from "@/models/company-model"
 import type { ISchedule } from "@/models/schedule-model"
 import { CompanySelect } from "./company-select"
 import { FlightList } from "./flight-list"
 
 type IProps = {
+  airports: IAirport[]
   companies: ICompany[]
   companyId: string
   onCompanyChange: (value: string) => void
   onSubmit: () => void
-  isLoading: boolean
   flights: ISchedule[]
+  hasQueried: boolean
 }
 
 export function FlightsByCompanyQuery(props: IProps) {
-  const { companies, companyId, onCompanyChange, onSubmit, isLoading, flights } =
-    props
-
-  const isDisabled = !companyId || isLoading
-  const buttonLabel = isLoading ? "Vykdoma..." : "Vykdyti"
+  const {
+    airports,
+    companies,
+    companyId,
+    onCompanyChange,
+    onSubmit,
+    flights,
+    hasQueried,
+  } = props
 
   return (
     <Card>
@@ -33,11 +39,9 @@ export function FlightsByCompanyQuery(props: IProps) {
             onChange={onCompanyChange}
             companies={companies}
           />
-          <Button onClick={onSubmit} disabled={isDisabled}>
-            {buttonLabel}
-          </Button>
+          <Button onClick={onSubmit}>Vykdyti</Button>
         </div>
-        <FlightList flights={flights} />
+        <FlightList flights={flights} airports={airports} hasQueried={hasQueried} />
       </CardContent>
     </Card>
   )

@@ -10,16 +10,13 @@ type IProps = {
   airportId: string
   onAirportChange: (value: string) => void
   onSubmit: () => void
-  isLoading: boolean
   flights: ISchedule[]
+  hasQueried: boolean
 }
 
 export function FlightsFromAirportQuery(props: IProps) {
-  const { airports, airportId, onAirportChange, onSubmit, isLoading, flights } =
+  const { airports, airportId, onAirportChange, onSubmit, flights, hasQueried } =
     props
-
-  const isDisabled = !airportId || isLoading
-  const buttonLabel = isLoading ? "Vykdoma..." : "Vykdyti"
 
   return (
     <Card>
@@ -33,11 +30,9 @@ export function FlightsFromAirportQuery(props: IProps) {
             onChange={onAirportChange}
             airports={airports}
           />
-          <Button onClick={onSubmit} disabled={isDisabled}>
-            {buttonLabel}
-          </Button>
+          <Button onClick={onSubmit}>Vykdyti</Button>
         </div>
-        <FlightList flights={flights} />
+        <FlightList flights={flights} airports={airports} hasQueried={hasQueried} />
       </CardContent>
     </Card>
   )

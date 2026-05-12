@@ -15,7 +15,12 @@ type IProps = {
 }
 
 export function AirportSelect(props: IProps) {
-  const { value, onChange, airports, placeholder = "Pasirinkite oro uostą" } = props
+  const {
+    value,
+    onChange,
+    airports,
+    placeholder = "Pasirinkite oro uostą",
+  } = props
 
   return (
     <Select value={value} onValueChange={onChange}>
