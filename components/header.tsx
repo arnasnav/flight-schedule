@@ -11,6 +11,17 @@ const menu: INav[] = [
     slug: "/arrivals",
   },
   {
+    title: "Užklausos",
+    slug: "/queries",
+    children: [
+      { title: "Atskrendantys lėktuvai", slug: "/queries/arriving-aircrafts" },
+      { title: "Išskrendantys lėktuvai", slug: "/queries/departing-aircrafts" },
+      { title: "Tranzito oro uostai", slug: "/queries/transit-airports" },
+      { title: "Skrydžiai iš oro uosto", slug: "/queries/flights-from-airport" },
+      { title: "Skrydžiai pagal kompaniją", slug: "/queries/flights-by-company" },
+    ],
+  },
+  {
     title: "Klasifikatoriai",
     slug: "/classifiers",
     children: [
