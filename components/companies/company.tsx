@@ -40,8 +40,7 @@ export function Companies(props: IProps) {
   const handleEdit = async (newName: string, newCode: string) => {
     if (!editingCompany) return
 
-    await putApi("/api/companies", {
-      id: editingCompany.id,
+    await putApi(`/api/companies/${editingCompany.id}`, {
       name: newName,
       code: newCode,
     })

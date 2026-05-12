@@ -41,8 +41,7 @@ export function Airports(props: IProps) {
   const handleEdit = async (newName: string, newCode: string) => {
     if (!editingAirport) return
 
-    await putApi("/api/airports", {
-      id: editingAirport.id,
+    await putApi(`/api/airports/${editingAirport.id}`, {
       name: newName,
       code: newCode,
     })

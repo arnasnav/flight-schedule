@@ -3,7 +3,6 @@ import type { ICompany } from "@/models/company-model"
 import { connectMongoose } from "@/utils/mongoose-client"
 import { NextResponse } from "next/server"
 import type { IWithStringId } from "@/models/model-t"
-import { CompanyService } from "@/services/company-service"
 
 export async function GET(): Promise<NextResponse<IWithStringId<ICompany>[]>> {
   await connectMongoose()
@@ -18,14 +17,4 @@ export async function POST(request: Request) {
   const newCompany = await Company.create(body)
 
   return Response.json(newCompany)
-}
-
-export async function PUT(request: Request) {
-  const body = await request.json()
-
-  const companyService = new CompanyService()
-
-  await companyService.updateCompany(body)
-
-  return Response.json({ message: "Updated successfully" })
 }

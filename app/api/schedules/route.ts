@@ -19,13 +19,3 @@ export async function POST(request: Request) {
 
   return NextResponse.json(schedule)
 }
-
-export async function PUT(request: Request) {
-  const body = await request.json()
-
-  const scheduleService = new ScheduleService()
-
-  await scheduleService.updateSchedule(body)
-
-  return Response.json({ message: "Updated successfully" })
-}

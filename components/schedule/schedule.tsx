@@ -58,8 +58,7 @@ export function Schedule(props: IProps) {
   const handleEdit = async (formData: ISchedule) => {
     if (!editingSchedule) return
 
-    await putApi("/api/schedules", {
-      id: editingSchedule.id,
+    await putApi(`/api/schedules/${editingSchedule.id}`, {
       ...formData,
     })
     setEditingSchedule(undefined)

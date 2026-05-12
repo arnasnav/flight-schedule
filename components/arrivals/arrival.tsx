@@ -31,8 +31,7 @@ export function Arrivals(props: IProps) {
   }
 
   const handleToggleArrival = async (flight: ISchedule) => {
-    await putApi(`/api/schedules`, {
-      id: flight.id,
+    await putApi(`/api/schedules/${flight.id}`, {
       ...flight,
       hasArrived: !flight.hasArrived,
     })
