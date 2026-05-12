@@ -45,8 +45,8 @@ export function AddAirportDialog(props: IProps) {
     code: z
       .string()
       .trim()
-      .min(2, "Kodas per trumpas.")
-      .max(5, "Kodas per ilgas."),
+      .min(3, "Kodas per trumpas.")
+      .max(3, "Kodas per ilgas."),
   })
 
   const form = useForm<z.infer<typeof formSchema>>({

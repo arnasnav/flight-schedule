@@ -42,17 +42,17 @@ export function EditAirportDialog(props: IProps) {
           }
 
           return !existingNames.some(
-            (name) => name.toLowerCase() === val.toLowerCase(),
+            (name) => name.toLowerCase() === val.toLowerCase()
           )
         },
-        { message: "Oro uostas tokiu pavadinimu jau egzistuoja." },
+        { message: "Oro uostas tokiu pavadinimu jau egzistuoja." }
       ),
 
     code: z
       .string()
       .trim()
-      .min(2, "Kodas per trumpas.")
-      .max(5, "Kodas per ilgas."),
+      .min(3, "Kodas per trumpas.")
+      .max(3, "Kodas per ilgas."),
   })
 
   const form = useForm<z.infer<typeof formSchema>>({
