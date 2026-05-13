@@ -31,90 +31,71 @@ export function Flights(props: IProps) {
   const [schedules, setSchedules] = useState<ISchedule[]>([])
   const [hasQueried, setHasQueried] = useState(false)
 
-  const companyDisabled = !filterType || filterType !== "by-company"
+  const companyDisabled = filterType !== "by-company"
   const airportDisabled = !filterType || filterType === "by-company"
+
+  const clearSchedules = () => {
+    setSchedules([])
+    setHasQueried(false)
+  }
+
+  const fetchSchedules = async (url: string) => {
+    const data = await getApi<ISchedule[]>(url)
+    setSchedules(data ?? [])
+    setHasQueried(true)
+  }
+
+  const getAirportUrl = (type: string, airportId: string) => {
+    const encodedId = encodeURIComponent(airportId)
+    return type === "depart-from-airport"
+      ? `/api/flights-from-airport?airportId=${encodedId}`
+      : `/api/flights-to-airport?airportId=${encodedId}`
+  }
 
   const handleFilterTypeChange = async (type: string) => {
     setFilterType(type)
-
     if (type === "by-company") {
       setAirportId("")
       if (!companyId) {
-        setSchedules([])
-        setHasQueried(false)
-      } else {
-        const data = await getApi<ISchedule[]>(
-          `/api/flights-by-company?companyId=${encodeURIComponent(companyId)}`
-        )
-        setSchedules(data ?? [])
-        setHasQueried(true)
+        clearSchedules()
+        return
       }
-    } else {
-      setCompanyId("")
-      if (!airportId) {
-        setSchedules([])
-        setHasQueried(false)
-      } else {
-        let url = ""
-        if (type === "depart-from-airport") {
-          url = `/api/flights-from-airport?airportId=${encodeURIComponent(
-            airportId
-          )}`
-        } else {
-          url = `/api/flights-to-airport?airportId=${encodeURIComponent(
-            airportId
-          )}`
-        }
-        const data = await getApi<ISchedule[]>(url)
-        setSchedules(data ?? [])
-        setHasQueried(true)
-      }
+      await fetchSchedules(
+        `/api/flights-by-company?companyId=${encodeURIComponent(companyId)}`
+      )
+      return
     }
+    setCompanyId("")
+    if (!airportId) {
+      clearSchedules()
+      return
+    }
+    await fetchSchedules(getAirportUrl(type, airportId))
   }
 
   const handleCompanyChange = async (id: string) => {
     setCompanyId(id)
     if (filterType !== "by-company" || !id) {
-      setSchedules([])
-      setHasQueried(false)
-    } else {
-      const data = await getApi<ISchedule[]>(
-        `/api/flights-by-company?companyId=${encodeURIComponent(id)}`
-      )
-      setSchedules(data ?? [])
-      setHasQueried(true)
+      clearSchedules()
+      return
     }
+    await fetchSchedules(
+      `/api/flights-by-company?companyId=${encodeURIComponent(id)}`
+    )
   }
 
   const handleAirportChange = async (id: string) => {
     setAirportId(id)
     if (!filterType || filterType === "by-company" || !id) {
-      setSchedules([])
-      setHasQueried(false)
-    } else {
-      let url = ""
-      if (filterType === "depart-from-airport") {
-        url = `/api/flights-from-airport?airportId=${encodeURIComponent(id)}`
-      } else {
-        url = `/api/flights-to-airport?airportId=${encodeURIComponent(id)}`
-      }
-      const data = await getApi<ISchedule[]>(url)
-      setSchedules(data ?? [])
-      setHasQueried(true)
+      clearSchedules()
+      return
     }
+    await fetchSchedules(getAirportUrl(filterType, id))
   }
 
-  const onFilterTypeSelect = (value: string) => {
-    void handleFilterTypeChange(value)
-  }
-
-  const onCompanySelect = (id: string) => {
-    void handleCompanyChange(id)
-  }
-
-  const onAirportSelect = (id: string) => {
-    void handleAirportChange(id)
-  }
+  const onFilterTypeSelect = handleFilterTypeChange
+  const onCompanySelect = handleCompanyChange
+  const onAirportSelect = handleAirportChange
 
   return (
     <div className="p-8 w-full max-w-7xl mx-auto space-y-6">
@@ -134,10 +115,7 @@ export function Flights(props: IProps) {
               <p className="text-sm font-medium text-muted-foreground">
                 Užklausos tipas
               </p>
-              <Select
-                value={filterType}
-                onValueChange={onFilterTypeSelect}
-              >
+              <Select value={filterType} onValueChange={onFilterTypeSelect}>
                 <SelectTrigger>
                   <SelectValue placeholder="Pasirinkite tipą" />
                 </SelectTrigger>
