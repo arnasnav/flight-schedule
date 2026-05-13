@@ -19,7 +19,7 @@ export function CompanySelect(props: IProps) {
 
   return (
     <Select
-      value={value || undefined}
+      value={value}
       onValueChange={onChange}
       disabled={disabled}
     >

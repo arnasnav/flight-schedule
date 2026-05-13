@@ -30,7 +30,6 @@ export function Flights(props: IProps) {
   const [airportId, setAirportId] = useState("")
   const [schedules, setSchedules] = useState<ISchedule[]>([])
   const [hasQueried, setHasQueried] = useState(false)
-  const [loading, setLoading] = useState(false)
 
   const companyDisabled = !filterType || filterType !== "by-company"
   const airportDisabled = !filterType || filterType === "by-company"
@@ -44,13 +43,11 @@ export function Flights(props: IProps) {
         setSchedules([])
         setHasQueried(false)
       } else {
-        setLoading(true)
         const data = await getApi<ISchedule[]>(
           `/api/flights-by-company?companyId=${encodeURIComponent(companyId)}`
         )
         setSchedules(data ?? [])
         setHasQueried(true)
-        setLoading(false)
       }
     } else {
       setCompanyId("")
@@ -58,17 +55,19 @@ export function Flights(props: IProps) {
         setSchedules([])
         setHasQueried(false)
       } else {
-        setLoading(true)
         let url = ""
         if (type === "depart-from-airport") {
-          url = `/api/flights-from-airport?airportId=${encodeURIComponent(airportId)}`
+          url = `/api/flights-from-airport?airportId=${encodeURIComponent(
+            airportId
+          )}`
         } else {
-          url = `/api/flights-to-airport?airportId=${encodeURIComponent(airportId)}`
+          url = `/api/flights-to-airport?airportId=${encodeURIComponent(
+            airportId
+          )}`
         }
         const data = await getApi<ISchedule[]>(url)
         setSchedules(data ?? [])
         setHasQueried(true)
-        setLoading(false)
       }
     }
   }
@@ -79,13 +78,11 @@ export function Flights(props: IProps) {
       setSchedules([])
       setHasQueried(false)
     } else {
-      setLoading(true)
       const data = await getApi<ISchedule[]>(
         `/api/flights-by-company?companyId=${encodeURIComponent(id)}`
       )
       setSchedules(data ?? [])
       setHasQueried(true)
-      setLoading(false)
     }
   }
 
@@ -95,7 +92,6 @@ export function Flights(props: IProps) {
       setSchedules([])
       setHasQueried(false)
     } else {
-      setLoading(true)
       let url = ""
       if (filterType === "depart-from-airport") {
         url = `/api/flights-from-airport?airportId=${encodeURIComponent(id)}`
@@ -105,7 +101,6 @@ export function Flights(props: IProps) {
       const data = await getApi<ISchedule[]>(url)
       setSchedules(data ?? [])
       setHasQueried(true)
-      setLoading(false)
     }
   }
 
@@ -140,7 +135,7 @@ export function Flights(props: IProps) {
                 Užklausos tipas
               </p>
               <Select
-                value={filterType || undefined}
+                value={filterType}
                 onValueChange={onFilterTypeSelect}
               >
                 <SelectTrigger>
@@ -190,7 +185,6 @@ export function Flights(props: IProps) {
             airports={airports}
             companies={companies}
             hasQueried={hasQueried}
-            loading={loading}
           />
         </CardContent>
       </Card>

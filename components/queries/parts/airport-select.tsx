@@ -26,7 +26,7 @@ export function AirportSelect(props: IProps) {
 
   return (
     <Select
-      value={value || undefined}
+      value={value}
       onValueChange={onChange}
       disabled={disabled}
     >
