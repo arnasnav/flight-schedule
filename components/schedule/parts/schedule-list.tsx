@@ -154,11 +154,7 @@ export function ScheduleList(props: IProps) {
               </td>
 
               <td className="px-6 py-4 text-right space-x-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => onEdit(s)}
-                >
+                <Button variant="outline" size="sm" onClick={() => onEdit(s)}>
                   Keisti
                 </Button>
 

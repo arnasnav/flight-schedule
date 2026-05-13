@@ -7,30 +7,13 @@ type IProps = {
   airports: IAirport[]
   companies: ICompany[]
   hasQueried: boolean
-  loading: boolean
-}
-
-function formatTime(iso: string) {
-  try {
-    return new Date(iso).toLocaleString("lt-LT")
-  } catch {
-    return iso
-  }
 }
 
 export function FlightsResultsTable(props: IProps) {
-  const { schedules, airports, companies, hasQueried, loading } = props
+  const { schedules, airports, companies, hasQueried } = props
 
-  const airportMap = Object.fromEntries(
-    airports.map((a) => [a.id, a.name])
-  )
-  const companyMap = Object.fromEntries(
-    companies.map((c) => [c.id, c.name])
-  )
-
-  if (loading) {
-    return <p className="text-sm text-muted-foreground">Kraunama…</p>
-  }
+  const airportMap = Object.fromEntries(airports.map((a) => [a.id, a.name]))
+  const companyMap = Object.fromEntries(companies.map((c) => [c.id, c.name]))
 
   if (!hasQueried) {
     return (
@@ -69,17 +52,18 @@ export function FlightsResultsTable(props: IProps) {
                 {airportMap[flight.airportId] ?? flight.airportId}
               </td>
               <td className="px-3 py-2">
-                {airportMap[flight.arrivalAirportId] ??
-                  flight.arrivalAirportId}
+                {airportMap[flight.arrivalAirportId] ?? flight.arrivalAirportId}
               </td>
               <td className="px-3 py-2">
                 {companyMap[flight.companyId] ?? flight.companyId}
               </td>
               <td className="px-3 py-2">{flight.aircraftType}</td>
               <td className="px-3 py-2">
-                {formatTime(flight.departureTime)}
+                {new Date(flight.departureTime).toLocaleString("lt-LT")}
               </td>
-              <td className="px-3 py-2">{formatTime(flight.arrivalTime)}</td>
+              <td className="px-3 py-2">
+                {new Date(flight.arrivalTime).toLocaleString("lt-LT")}
+              </td>
             </tr>
           ))}
         </tbody>
