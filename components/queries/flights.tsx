@@ -93,10 +93,6 @@ export function Flights(props: IProps) {
     await fetchSchedules(getAirportUrl(filterType, id))
   }
 
-  const onFilterTypeSelect = handleFilterTypeChange
-  const onCompanySelect = handleCompanyChange
-  const onAirportSelect = handleAirportChange
-
   return (
     <div className="p-8 w-full max-w-7xl mx-auto space-y-6">
       <div>
@@ -115,7 +111,7 @@ export function Flights(props: IProps) {
               <p className="text-sm font-medium text-muted-foreground">
                 Užklausos tipas
               </p>
-              <Select value={filterType} onValueChange={onFilterTypeSelect}>
+              <Select value={filterType} onValueChange={handleFilterTypeChange}>
                 <SelectTrigger>
                   <SelectValue placeholder="Pasirinkite tipą" />
                 </SelectTrigger>
@@ -139,7 +135,7 @@ export function Flights(props: IProps) {
               </p>
               <CompanySelect
                 value={companyId}
-                onChange={onCompanySelect}
+                onChange={handleCompanyChange}
                 companies={companies}
                 disabled={companyDisabled}
               />
@@ -151,7 +147,7 @@ export function Flights(props: IProps) {
               </p>
               <AirportSelect
                 value={airportId}
-                onChange={onAirportSelect}
+                onChange={handleAirportChange}
                 airports={airports}
                 disabled={airportDisabled}
               />
