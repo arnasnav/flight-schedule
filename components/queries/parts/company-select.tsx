@@ -6,15 +6,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import type { ICompanySelectProps } from "@/types/props/queries"
 
-type IProps = {
-  value: string
-  onChange: (value: string) => void
-  companies: ICompany[]
-  disabled?: boolean
-}
-
-export function CompanySelect(props: IProps) {
+export function CompanySelect(props: ICompanySelectProps) {
   const { value, onChange, companies, disabled } = props
 
   return (

@@ -16,15 +16,11 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Field, FieldLabel, FieldError } from "@/components/ui/field"
+import { EMPTY_NAME_CODE_FORM_DEFAULTS } from "@/constants/form-defaults"
+import type { IAddAirportDialogProps } from "@/types/props/flights"
 import { toast } from "sonner"
 
-type IProps = {
-  onClose: () => void
-  onConfirm: (name: string, code: string) => void
-  existingNames: string[]
-}
-
-export function AddAirportDialog(props: IProps) {
+export function AddAirportDialog(props: IAddAirportDialogProps) {
   const { onClose, onConfirm, existingNames } = props
 
   const formSchema = z.object({
@@ -51,10 +47,7 @@ export function AddAirportDialog(props: IProps) {
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: "",
-      code: "",
-    },
+    defaultValues: { ...EMPTY_NAME_CODE_FORM_DEFAULTS },
   })
 
   const handleSubmit = (data: z.infer<typeof formSchema>) => {

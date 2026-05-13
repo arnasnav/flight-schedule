@@ -2,20 +2,16 @@ import type { Metadata } from "next"
 import "./globals.css"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
-import type { ReactNode } from "react"
 import { StoreProvider } from "@/components/providers/store-provider"
 import { Toaster } from "@/components/ui/sonner"
+import type { IRootLayoutProps } from "@/types/props/layout"
 
 export const metadata: Metadata = {
   title: "Lėktuvų tvarkaraštis",
   description: "Lėktuvų tvarkaraštis",
 }
 
-type IProps = {
-  children: ReactNode
-}
-
-export default function RootLayout(props: IProps) {
+export default function RootLayout(props: IRootLayoutProps) {
   const { children } = props
 
   return (

@@ -1,19 +1,12 @@
-import type { ISchedule } from "@/models/schedule-model"
-import type { IAirport } from "@/models/airport-model"
-import type { ICompany } from "@/models/company-model"
+import type { IFlightsResultsTableProps } from "@/types/props/queries"
+import { getAirportNameOrId, getCompanyNameOrId } from "@/utils/entity-lookup"
 
-type IProps = {
-  schedules: ISchedule[]
-  airports: IAirport[]
-  companies: ICompany[]
-  hasQueried: boolean
+function formatDate(date: string) {
+  return new Date(date).toLocaleString("lt-LT")
 }
 
-export function FlightsResultsTable(props: IProps) {
+export function FlightsResultsTable(props: IFlightsResultsTableProps) {
   const { schedules, airports, companies, hasQueried } = props
-
-  const airportMap = Object.fromEntries(airports.map((a) => [a.id, a.name]))
-  const companyMap = Object.fromEntries(companies.map((c) => [c.id, c.name]))
 
   if (!hasQueried) {
     return (
@@ -42,30 +35,36 @@ export function FlightsResultsTable(props: IProps) {
           </tr>
         </thead>
         <tbody>
-          {schedules.map((flight, idx) => (
-            <tr
-              key={flight.id ?? `${flight.flightNumber}-${idx}`}
-              className="border-t"
-            >
-              <td className="px-3 py-2">{flight.flightNumber}</td>
-              <td className="px-3 py-2">
-                {airportMap[flight.airportId] ?? flight.airportId}
-              </td>
-              <td className="px-3 py-2">
-                {airportMap[flight.arrivalAirportId] ?? flight.arrivalAirportId}
-              </td>
-              <td className="px-3 py-2">
-                {companyMap[flight.companyId] ?? flight.companyId}
-              </td>
-              <td className="px-3 py-2">{flight.aircraftType}</td>
-              <td className="px-3 py-2">
-                {new Date(flight.departureTime).toLocaleString("lt-LT")}
-              </td>
-              <td className="px-3 py-2">
-                {new Date(flight.arrivalTime).toLocaleString("lt-LT")}
-              </td>
-            </tr>
-          ))}
+          {schedules.map((flight, idx) => {
+            const departureLabel = getAirportNameOrId(
+              airports,
+              flight.airportId
+            )
+            const arrivalLabel = getAirportNameOrId(
+              airports,
+              flight.arrivalAirportId
+            )
+            const companyLabel = getCompanyNameOrId(companies, flight.companyId)
+
+            return (
+              <tr
+                key={flight.id ?? `${flight.flightNumber}-${idx}`}
+                className="border-t"
+              >
+                <td className="px-3 py-2">{flight.flightNumber}</td>
+                <td className="px-3 py-2">{departureLabel}</td>
+                <td className="px-3 py-2">{arrivalLabel}</td>
+                <td className="px-3 py-2">{companyLabel}</td>
+                <td className="px-3 py-2">{flight.aircraftType}</td>
+                <td className="px-3 py-2">
+                  {formatDate(flight.departureTime)}
+                </td>
+                <td className="px-3 py-2">
+                  {formatDate(flight.arrivalTime)}
+                </td>
+              </tr>
+            )
+          })}
         </tbody>
       </table>
     </div>

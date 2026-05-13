@@ -1,24 +1,16 @@
 "use client"
 
 import { useState } from "react"
-import type { IAirport } from "@/models/airport-model"
 import { TransitAirportsQuery } from "./parts/transit-airports-query"
 import { getApi } from "@/utils/server-api"
+import type { ITransitAirport } from "@/types/transit-airport"
+import type { ITransitAirportsProps } from "@/types/props/queries"
 
-type TransitAirport = {
-  code: string
-  name: string
-}
-
-type IProps = {
-  airports: IAirport[]
-}
-
-export function TransitAirports(props: IProps) {
+export function TransitAirports(props: ITransitAirportsProps) {
   const { airports } = props
 
   const [destinationAirportId, setDestinationAirportId] = useState("")
-  const [transitAirports, setTransitAirports] = useState<TransitAirport[]>([])
+  const [transitAirports, setTransitAirports] = useState<ITransitAirport[]>([])
   const [hasQueried, setHasQueried] = useState(false)
 
   const handleDestinationChange = async (id: string) => {
@@ -28,8 +20,8 @@ export function TransitAirports(props: IProps) {
       setHasQueried(false)
       return
     }
-    const data = await getApi<TransitAirport[]>(
-      `/api/transit-airports?destinationAirportId=${encodeURIComponent(id)}`
+    const data = await getApi<ITransitAirport[]>(
+      `/api/transit-airports?destinationAirportId=${id}`,
     )
     setTransitAirports(data ?? [])
     setHasQueried(true)

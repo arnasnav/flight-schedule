@@ -10,12 +10,9 @@ import { DeleteCompanyDialog } from "./parts/delete-company-dialog"
 import { EditCompanyDialog } from "./parts/edit-company-dialog"
 import { AddCompanyDialog } from "./parts/add-company-dialog"
 import { Button } from "@/components/ui/button"
+import type { ICompaniesProps } from "@/types/props/companies"
 
-type IProps = {
-  companies: ICompany[]
-}
-
-export function Companies(props: IProps) {
+export function Companies(props: ICompaniesProps) {
   const { companies: initialCompanies } = props
   const [companies, setCompanies] = useState<ICompany[]>(initialCompanies)
   const [deleteId, setDeleteId] = useState<string | undefined>(undefined)
@@ -41,6 +38,7 @@ export function Companies(props: IProps) {
     if (!editingCompany) return
 
     await putApi(`/api/companies/${editingCompany.id}`, {
+      id: editingCompany.id,
       name: newName,
       code: newCode,
     })

@@ -1,8 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import type { IAirport } from "@/models/airport-model"
-import type { ICompany } from "@/models/company-model"
 import type { ISchedule } from "@/models/schedule-model"
 import { getApi, postApi, putApi, deleteApi } from "@/utils/server-api"
 
@@ -13,20 +11,9 @@ import { AddScheduleDialog } from "./parts/add-schedule-dialog"
 import { DeleteScheduleDialog } from "./parts/delete-schedule-dialog"
 import { EditScheduleDialog } from "./parts/edit-schedule-dialog"
 import { ScheduleList } from "./parts/schedule-list"
-import type { IAircraft } from "@/models/aircraft-model"
-import type { IStatus } from "@/models/status-model"
-import type { ITerminal } from "@/models/terminal-model"
+import type { IScheduleProps } from "@/types/props/schedule"
 
-type IProps = {
-  initialSchedules: ISchedule[]
-  airports: IAirport[]
-  companies: ICompany[]
-  statuses: IStatus[]
-  terminals: ITerminal[]
-  aircrafts: IAircraft[]
-}
-
-export function Schedule(props: IProps) {
+export function Schedule(props: IScheduleProps) {
   const {
     initialSchedules,
     airports,
@@ -41,7 +28,7 @@ export function Schedule(props: IProps) {
   const [isAddOpen, setIsAddOpen] = useState(false)
   const [deleteId, setDeleteId] = useState<string | undefined>(undefined)
   const [editingSchedule, setEditingSchedule] = useState<ISchedule | undefined>(
-    undefined,
+    undefined
   )
 
   const refreshSchedules = async () => {
@@ -57,17 +44,14 @@ export function Schedule(props: IProps) {
 
   const handleEdit = async (formData: ISchedule) => {
     if (!editingSchedule) return
-
-    await putApi(`/api/schedules/${editingSchedule.id}`, {
-      ...formData,
-    })
+    formData.id = editingSchedule.id
+    await putApi(`/api/schedules/${editingSchedule.id}`, formData)
     setEditingSchedule(undefined)
     await refreshSchedules()
   }
 
   const handleDelete = async () => {
     if (!deleteId) return
-
     await deleteApi("/api/schedules", deleteId)
     setDeleteId(undefined)
     await refreshSchedules()

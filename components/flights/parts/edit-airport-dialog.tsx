@@ -16,17 +16,10 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Field, FieldLabel, FieldError } from "@/components/ui/field"
-import type { IAirport } from "@/models/airport-model"
 import { toast } from "sonner"
+import type { IEditAirportDialogProps } from "@/types/props/flights"
 
-type IProps = {
-  airport: IAirport
-  onClose: () => void
-  onConfirm: (newName: string, newCode: string) => void
-  existingNames: string[]
-}
-
-export function EditAirportDialog(props: IProps) {
+export function EditAirportDialog(props: IEditAirportDialogProps) {
   const { airport, onClose, onConfirm, existingNames } = props
 
   const formSchema = z.object({

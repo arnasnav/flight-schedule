@@ -1,28 +1,11 @@
 "use client"
 
-import type { Control, UseFieldArrayReturn, UseFormGetValues, UseFormSetValue } from "react-hook-form"
+import type { IAddScheduleFormFieldsRestProps } from "@/types/props/schedule"
 
-import type { IAircraft } from "@/models/aircraft-model"
-import type { IAirport } from "@/models/airport-model"
-import type { IStatus } from "@/models/status-model"
-import type { ITerminal } from "@/models/terminal-model"
-
-import type { AddScheduleFormValues } from "./schedule-form-schema"
 import { ScheduleFormTechnicalFields } from "./schedule-form-technical-fields"
 import { ScheduleStopoverAirportsFields } from "./schedule-stopover-airports-fields"
 
-type IProps = {
-  control: Control<AddScheduleFormValues>
-  setValue: UseFormSetValue<AddScheduleFormValues>
-  getValues: UseFormGetValues<AddScheduleFormValues>
-  airports: IAirport[]
-  statuses: IStatus[]
-  terminals: ITerminal[]
-  aircrafts: IAircraft[]
-  stopovers: UseFieldArrayReturn<AddScheduleFormValues, "stopoverAirports">
-}
-
-export function AddScheduleFormFieldsRest(props: IProps) {
+export function AddScheduleFormFieldsRest(props: IAddScheduleFormFieldsRestProps) {
   const {
     control,
     setValue,

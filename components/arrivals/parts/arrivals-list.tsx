@@ -1,27 +1,13 @@
 "use client"
 
-import type { ISchedule } from "@/models/schedule-model"
-import type { IAirport } from "@/models/airport-model"
-import type { ICompany } from "@/models/company-model"
 import { Card, CardContent } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
+import type { IArrivalsListProps } from "@/types/props/arrivals"
+import { getAirportName, getCompanyName } from "@/utils/entity-lookup"
 
-type IProps = {
-  flights: ISchedule[]
-  airports: IAirport[]
-  companies: ICompany[]
-  onToggleArrival: (flight: ISchedule) => void
-}
-
-export function ArrivalsList(props: IProps) {
+export function ArrivalsList(props: IArrivalsListProps) {
   const { flights, airports, companies, onToggleArrival } = props
-
-  const getAirportName = (id: string) =>
-    airports.find((a) => a.id === id)?.name
-
-  const getCompanyName = (id: string) =>
-    companies.find((c) => c.id === id)?.name
 
   if (flights.length === 0) {
     return (
@@ -33,48 +19,49 @@ export function ArrivalsList(props: IProps) {
 
   return (
     <div className="grid gap-4">
-      {flights.map((flight) => (
-        <Card key={flight.id} className="hover:shadow-md transition">
-          <CardContent className="p-6 flex items-center justify-between">
-            <div className="flex gap-8 items-center">
-              <div>
-                <p className="text-xs text-muted-foreground uppercase font-semibold">
-                  Reisas
-                </p>
-                <p className="text-xl font-bold">{flight.flightNumber}</p>
+      {flights.map((flight) => {
+        const companyName = getCompanyName(companies, flight.companyId)
+        const airportName = getAirportName(airports, flight.airportId)
+
+        return (
+          <Card key={flight.id} className="hover:shadow-md transition">
+            <CardContent className="p-6 flex items-center justify-between">
+              <div className="flex gap-8 items-center">
+                <div>
+                  <p className="text-xs text-muted-foreground uppercase font-semibold">
+                    Reisas
+                  </p>
+                  <p className="text-xl font-bold">{flight.flightNumber}</p>
+                </div>
+
+                <div>
+                  <p className="text-xs text-muted-foreground">Kompanija</p>
+                  <p className="font-medium">{companyName}</p>
+                </div>
+
+                <div>
+                  <p className="text-xs text-muted-foreground">Iš oro uosto</p>
+                  <p className="font-medium">{airportName}</p>
+                </div>
               </div>
 
-              <div>
-                <p className="text-xs text-muted-foreground">Kompanija</p>
-                <p className="font-medium">
-                  {getCompanyName(flight.companyId)}
-                </p>
+              <div className="flex items-center space-x-3 bg-slate-50 p-3 rounded-lg border">
+                <Checkbox
+                  id={`arrived-${flight.id}`}
+                  checked={flight.hasArrived}
+                  onCheckedChange={() => onToggleArrival(flight)}
+                />
+                <Label
+                  htmlFor={`arrived-${flight.id}`}
+                  className="cursor-pointer font-medium"
+                >
+                  Atvyko
+                </Label>
               </div>
-
-              <div>
-                <p className="text-xs text-muted-foreground">Iš oro uosto</p>
-                <p className="font-medium">
-                  {getAirportName(flight.airportId)}
-                </p>
-              </div>
-            </div>
-
-<div className="flex items-center space-x-3 bg-slate-50 p-3 rounded-lg border">
-              <Checkbox
-                id={`arrived-${flight.id}`}
-                checked={flight.hasArrived}
-                onCheckedChange={() => onToggleArrival(flight)}
-              />
-              <Label
-                htmlFor={`arrived-${flight.id}`}
-                className="cursor-pointer font-medium"
-              >
-                Atvyko
-              </Label>
-            </div>
-          </CardContent>
-        </Card>
-      ))}
+            </CardContent>
+          </Card>
+        )
+      })}
     </div>
   )
 }

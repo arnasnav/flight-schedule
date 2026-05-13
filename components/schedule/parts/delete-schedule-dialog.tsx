@@ -11,13 +11,9 @@ import {
 
 import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
+import type { IDeleteScheduleDialogProps } from "@/types/props/dialogs"
 
-type IProps = {
-  onClose: () => void
-  onConfirm: () => void
-}
-
-export function DeleteScheduleDialog(props: IProps) {
+export function DeleteScheduleDialog(props: IDeleteScheduleDialogProps) {
   const { onClose, onConfirm } = props
   const handleConfirm = () => {
     onConfirm()

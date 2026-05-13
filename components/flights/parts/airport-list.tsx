@@ -3,14 +3,9 @@
 import type { IAirport } from "@/models/airport-model"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
+import type { IAirportListProps } from "@/types/props/flights"
 
-type IProps = {
-  airports: IAirport[]
-  onDelete: (id: string) => void
-  onEdit: (airport: IAirport) => void
-}
-
-export function AirportList(props: IProps) {
+export function AirportList(props: IAirportListProps) {
   const { airports, onDelete, onEdit } = props
   if (airports.length === 0) {
     return (

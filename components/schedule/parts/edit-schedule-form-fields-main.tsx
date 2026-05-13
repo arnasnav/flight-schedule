@@ -1,7 +1,6 @@
 "use client"
 
 import { Controller } from "react-hook-form"
-import type { Control } from "react-hook-form"
 
 import { Field, FieldError, FieldLabel } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
@@ -12,18 +11,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import type { IAirport } from "@/models/airport-model"
-import type { ICompany } from "@/models/company-model"
 
-import type { EditScheduleFormValues } from "./schedule-form-schema"
+import type { IEditScheduleFormFieldsMainProps } from "@/types/props/schedule"
 
-type IProps = {
-  control: Control<EditScheduleFormValues>
-  airports: IAirport[]
-  companies: ICompany[]
-}
-
-export function EditScheduleFormFieldsMain(props: IProps) {
+export function EditScheduleFormFieldsMain(props: IEditScheduleFormFieldsMainProps) {
   const { control, airports, companies } = props
 
   return (

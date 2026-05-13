@@ -1,28 +1,11 @@
 "use client"
 
 import { Dialog, DialogContent } from "@/components/ui/dialog"
-import type { IAirport } from "@/models/airport-model"
-import type { IAircraft } from "@/models/aircraft-model"
-import type { ICompany } from "@/models/company-model"
-import type { ISchedule } from "@/models/schedule-model"
-import type { IStatus } from "@/models/status-model"
-import type { ITerminal } from "@/models/terminal-model"
 
 import { EditScheduleDialogForm } from "./edit-schedule-dialog-form"
+import type { IEditScheduleDialogProps } from "@/types/props/schedule"
 
-type IProps = {
-  schedule: ISchedule
-  onClose: () => void
-  onConfirm: (data: ISchedule) => Promise<void>
-  airports: IAirport[]
-  companies: ICompany[]
-  existingSchedules: ISchedule[]
-  statuses: IStatus[]
-  terminals: ITerminal[]
-  aircrafts: IAircraft[]
-}
-
-export function EditScheduleDialog(props: IProps) {
+export function EditScheduleDialog(props: IEditScheduleDialogProps) {
   const {
     schedule,
     onClose,

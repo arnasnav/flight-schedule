@@ -11,12 +11,9 @@ import { AirportList } from "./parts/airport-list"
 import { DeleteAirportDialog } from "./parts/delete-airport-dialog"
 import { EditAirportDialog } from "./parts/edit-airport-dialog"
 import { AddAirportDialog } from "./parts/add-airport-dialog"
+import type { IAirportsProps } from "@/types/props/flights"
 
-type IProps = {
-  airports: IAirport[]
-}
-
-export function Airports(props: IProps) {
+export function Airports(props: IAirportsProps) {
   const { airports: initialAirports } = props
   const [airports, setAirports] = useState<IAirport[]>(initialAirports)
   const [deleteId, setDeleteId] = useState<string | undefined>(undefined)
@@ -42,6 +39,7 @@ export function Airports(props: IProps) {
     if (!editingAirport) return
 
     await putApi(`/api/airports/${editingAirport.id}`, {
+      id: editingAirport.id,
       name: newName,
       code: newCode,
     })

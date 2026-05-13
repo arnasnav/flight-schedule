@@ -17,7 +17,7 @@ export const postApi = async (url: string, body: object, method = "POST") => {
   const response = await fetch(`${SITE}${url}`, {
     method,
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body)
+    body: JSON.stringify(body),
   })
   return await response.json()
 }

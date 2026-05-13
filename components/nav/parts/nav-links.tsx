@@ -1,13 +1,9 @@
 import Link from "next/link"
-import type { INav } from "@/types/nav-t"
+import type { INavLinksProps } from "@/types/props/nav"
+
 import { NavDropdown } from "./nav-dropdown"
 
-type IProps = {
-  menu: INav[]
-  isVisible: boolean
-}
-
-export function NavLinks(props: IProps) {
+export function NavLinks(props: INavLinksProps) {
   const { menu, isVisible } = props
   return (
     <div

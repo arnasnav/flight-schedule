@@ -13,12 +13,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import type { IAirport } from "@/models/airport-model"
-import type { IAircraft } from "@/models/aircraft-model"
-import type { ICompany } from "@/models/company-model"
-import type { ISchedule } from "@/models/schedule-model"
-import type { IStatus } from "@/models/status-model"
-import type { ITerminal } from "@/models/terminal-model"
+import { ADD_SCHEDULE_FORM_DEFAULTS } from "@/constants/form-defaults"
+import type { IAddScheduleDialogProps } from "@/types/props/schedule"
+import { findAirportById } from "@/utils/entity-lookup"
 
 import { AddScheduleFormFieldsMain } from "./add-schedule-form-fields-main"
 import { AddScheduleFormFieldsRest } from "./add-schedule-form-fields-rest"
@@ -27,18 +24,7 @@ import {
   type AddScheduleFormValues,
 } from "./schedule-form-schema"
 
-type IProps = {
-  onClose: () => void
-  onConfirm: (data: ISchedule) => Promise<void>
-  airports: IAirport[]
-  companies: ICompany[]
-  existingSchedules: ISchedule[]
-  statuses: IStatus[]
-  terminals: ITerminal[]
-  aircrafts: IAircraft[]
-}
-
-export function AddScheduleDialogForm(props: IProps) {
+export function AddScheduleDialogForm(props: IAddScheduleDialogProps) {
   const {
     onClose,
     onConfirm,
@@ -54,29 +40,7 @@ export function AddScheduleDialogForm(props: IProps) {
 
   const form = useForm<AddScheduleFormValues>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      airportId: "",
-      companyId: "",
-      flightId: "",
-      flightNumber: "",
-      departureTime: "",
-      arrivalAirportId: "",
-      arrivalTime: "",
-      scheduledDepartureTime: "",
-      actualDepartureTime: "",
-      scheduledArrivalTime: "",
-      actualArrivalTime: "",
-      flightStatus: "",
-      terminal: "",
-      gate: "",
-      aircraftType: "",
-      seatCount: "0",
-      availableSeatCount: "0",
-      flightPrice: "0",
-      baggageLimit: "",
-      stopoverAirports: [],
-      hasArrived: false,
-    },
+    defaultValues: ADD_SCHEDULE_FORM_DEFAULTS,
   })
 
   const { control, setValue, getValues } = form
@@ -88,7 +52,7 @@ export function AddScheduleDialogForm(props: IProps) {
 
   const onSubmit: SubmitHandler<AddScheduleFormValues> = async (data) => {
     const formattedStopovers = data.stopoverAirports.map((s) => {
-      const airport = airports.find((a) => a.id === s.airportId)
+      const airport = findAirportById(airports, s.airportId)
       return {
         code: airport?.code || "",
         name: airport?.name || "",

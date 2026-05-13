@@ -1,15 +1,13 @@
 "use client"
 
-import type { INav } from "@/types/nav-t"
 import { useState } from "react"
 
 import { NavLinks } from "@/components/nav/parts/nav-links"
 import { NavMobileToggle } from "@/components/nav/parts/nav-mobile"
 import { NavLogo } from "@/components/nav/parts/nav-logo"
+import type { INavBarProps } from "@/types/props/nav"
 
-type IProps = { menu: INav[] }
-
-export function Nav(props: IProps) {
+export function Nav(props: INavBarProps) {
   const { menu } = props
   const [isVisible, setIsVisible] = useState(false)
 

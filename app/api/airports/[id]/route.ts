@@ -1,23 +1,19 @@
 import { AirportService } from "@/services/airport-service"
 
-export async function PUT(
-  request: Request,
-  { params }: { params: Promise<{ id: string }> },
-) {
-  const { id } = await params
+export async function PUT(request: Request) {
   const body = await request.json()
 
   const airportService = new AirportService()
-  await airportService.updateAirport({ ...body, id })
+  await airportService.updateAirport(body)
 
   return Response.json({ message: "Updated successfully" })
 }
 
 export async function DELETE(
   request: Request,
-  { params }: { params: Promise<{ id: string }> },
+  ctx: RouteContext<"/api/airports/[id]">,
 ) {
-  const { id } = await params
+  const { id } = await ctx.params
 
   const airportService = new AirportService()
   await airportService.deleteAirport(id)

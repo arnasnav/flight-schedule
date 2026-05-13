@@ -15,17 +15,10 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Field, FieldLabel, FieldError } from "@/components/ui/field"
-import type { ICompany } from "@/models/company-model"
 import { toast } from "sonner"
+import type { IEditCompanyDialogProps } from "@/types/props/companies"
 
-type IProps = {
-  company: ICompany
-  onClose: () => void
-  onConfirm: (newName: string, newCode: string) => void
-  existingNames: string[]
-}
-
-export function EditCompanyDialog(props: IProps) {
+export function EditCompanyDialog(props: IEditCompanyDialogProps) {
   const { company, onClose, onConfirm, existingNames } = props
 
   const formSchema = z.object({

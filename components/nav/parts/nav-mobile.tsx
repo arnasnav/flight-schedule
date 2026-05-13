@@ -1,11 +1,8 @@
 import { Menu } from "lucide-react"
 
-type IProps = {
-  isVisible: boolean
-  onToggle: () => void
-}
+import type { INavMobileToggleProps } from "@/types/props/nav"
 
-export function NavMobileToggle(props: IProps) {
+export function NavMobileToggle(props: INavMobileToggleProps) {
   const { onToggle } = props
   return (
     <button

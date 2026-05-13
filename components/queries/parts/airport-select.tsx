@@ -6,16 +6,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import type { IAirportSelectProps } from "@/types/props/queries"
 
-type IProps = {
-  value: string
-  onChange: (value: string) => void
-  airports: IAirport[]
-  placeholder?: string
-  disabled?: boolean
-}
-
-export function AirportSelect(props: IProps) {
+export function AirportSelect(props: IAirportSelectProps) {
   const {
     value,
     onChange,

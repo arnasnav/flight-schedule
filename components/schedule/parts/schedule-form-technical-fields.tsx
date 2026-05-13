@@ -3,9 +3,6 @@
 import {
   Controller,
   useWatch,
-  type Control,
-  type UseFormGetValues,
-  type UseFormSetValue,
 } from "react-hook-form"
 
 import { Field, FieldError, FieldLabel } from "@/components/ui/field"
@@ -17,22 +14,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import type { IAircraft } from "@/models/aircraft-model"
 import type { IStatus } from "@/models/status-model"
-import type { ITerminal } from "@/models/terminal-model"
 
-import type { AddScheduleFormValues } from "./schedule-form-schema"
+import type { IScheduleFormTechnicalFieldsProps } from "@/types/props/schedule"
+import { findAircraftByName, findTerminalByName } from "@/utils/entity-lookup"
 
-type IProps = {
-  control: Control<AddScheduleFormValues>
-  setValue: UseFormSetValue<AddScheduleFormValues>
-  getValues: UseFormGetValues<AddScheduleFormValues>
-  statuses: IStatus[]
-  terminals: ITerminal[]
-  aircrafts: IAircraft[]
-}
-
-export function ScheduleFormTechnicalFields(props: IProps) {
+export function ScheduleFormTechnicalFields(
+  props: IScheduleFormTechnicalFieldsProps,
+) {
   const {
     control,
     setValue,
@@ -43,7 +32,7 @@ export function ScheduleFormTechnicalFields(props: IProps) {
   } = props
 
   const terminal = useWatch({ control, name: "terminal" })
-  const selectedTerminal = terminals.find((t) => t.name === terminal)
+  const selectedTerminal = findTerminalByName(terminals, terminal)
   const gates = selectedTerminal?.gates ?? []
 
   return (
@@ -140,7 +129,7 @@ export function ScheduleFormTechnicalFields(props: IProps) {
               value={field.value}
               onValueChange={(name) => {
                 field.onChange(name)
-                const ac = aircrafts.find((a) => a.name === name)
+                const ac = findAircraftByName(aircrafts, name)
                 if (ac) {
                   setValue("seatCount", String(ac.seats), {
                     shouldValidate: true,

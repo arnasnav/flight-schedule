@@ -1,5 +1,4 @@
 import Link from "next/link"
-import type { INav } from "@/types/nav-t"
 
 import {
   NavigationMenu,
@@ -9,12 +8,9 @@ import {
   NavigationMenuContent,
   NavigationMenuLink,
 } from "@/components/ui/navigation-menu"
+import type { INavDropdownProps } from "@/types/props/nav"
 
-type IProps = {
-  item: INav
-}
-
-export function NavDropdown(props: IProps) {
+export function NavDropdown(props: INavDropdownProps) {
   const { item } = props
   return (
     <NavigationMenu>

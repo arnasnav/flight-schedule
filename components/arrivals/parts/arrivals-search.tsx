@@ -3,13 +3,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import type { IArrivalsSearchProps } from "@/types/props/arrivals"
 
-type IProps = {
-  value: string
-  onChange: (val: string) => void
-}
-
-export function ArrivalsSearch(props: IProps) {
+export function ArrivalsSearch(props: IArrivalsSearchProps) {
   const { value, onChange } = props
   return (
     <Card className="shadow-sm">

@@ -1,24 +1,11 @@
 "use client"
 
-import type { ISchedule } from "@/models/schedule-model"
-import type { IAirport } from "@/models/airport-model"
-import type { ICompany } from "@/models/company-model"
 import { Button } from "@/components/ui/button"
+import type { IScheduleListProps } from "@/types/props/schedule"
+import { findAirportById, findCompanyById } from "@/utils/entity-lookup"
 
-type IProps = {
-  schedules: ISchedule[]
-  airports: IAirport[]
-  companies: ICompany[]
-  onEdit: (s: ISchedule) => void
-  onDelete: (id: string) => void
-}
-
-export function ScheduleList(props: IProps) {
+export function ScheduleList(props: IScheduleListProps) {
   const { schedules, airports, companies, onEdit, onDelete } = props
-
-  const companyMap = Object.fromEntries(companies.map((c) => [c.id, c]))
-
-  const airportMap = Object.fromEntries(airports.map((a) => [a.id, a]))
 
   if (schedules.length === 0) {
     return (
@@ -26,6 +13,10 @@ export function ScheduleList(props: IProps) {
         Skrydžių nerasta
       </div>
     )
+  }
+
+  function formatDate(date: string) {
+    return new Date(date).toLocaleString("lt-LT")
   }
 
   return (
@@ -43,9 +34,9 @@ export function ScheduleList(props: IProps) {
 
       <tbody className="divide-y divide-slate-100">
         {schedules.map((s) => {
-          const company = companyMap[s.companyId]
-          const departureAirport = airportMap[s.airportId]
-          const arrivalAirport = airportMap[s.arrivalAirportId]
+          const company = findCompanyById(companies, s.companyId)
+          const departureAirport = findAirportById(airports, s.airportId)
+          const arrivalAirport = findAirportById(airports, s.arrivalAirportId)
 
           return (
             <tr key={s.id} className="hover:bg-slate-50/50 transition-colors">
@@ -84,35 +75,26 @@ export function ScheduleList(props: IProps) {
               </td>
 
               <td className="px-6 py-4 text-xs space-y-1">
-                <div>
-                  Išvykimas: {new Date(s.departureTime).toLocaleString("lt-LT")}
-                </div>
+                <div>Išvykimas: {formatDate(s.departureTime)}</div>
                 <div>
                   Plan. išv.:{" "}
-                  {new Date(
-                    s.scheduledDepartureTime || s.departureTime
-                  ).toLocaleString("lt-LT")}
+                  {formatDate(s.scheduledDepartureTime) ||
+                    formatDate(s.departureTime)}
                 </div>
                 <div>
                   Fakt. išv.:{" "}
-                  {new Date(
-                    s.actualDepartureTime || s.departureTime
-                  ).toLocaleString("lt-LT")}
+                  {formatDate(s.actualDepartureTime) ||
+                    formatDate(s.departureTime)}
                 </div>
-                <div>
-                  Atvykimas: {new Date(s.arrivalTime).toLocaleString("lt-LT")}
-                </div>
+                <div>Atvykimas: {formatDate(s.arrivalTime)}</div>
                 <div>
                   Plan. atv.:{" "}
-                  {new Date(
-                    s.scheduledArrivalTime || s.arrivalTime
-                  ).toLocaleString("lt-LT")}
+                  {formatDate(s.scheduledArrivalTime) ||
+                    formatDate(s.arrivalTime)}
                 </div>
                 <div>
                   Fakt. atv.:{" "}
-                  {new Date(
-                    s.actualArrivalTime || s.arrivalTime
-                  ).toLocaleString("lt-LT")}
+                  {formatDate(s.actualArrivalTime) || formatDate(s.arrivalTime)}
                 </div>
               </td>
 

@@ -13,12 +13,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import type { IAirport } from "@/models/airport-model"
-import type { IAircraft } from "@/models/aircraft-model"
-import type { ICompany } from "@/models/company-model"
-import type { ISchedule } from "@/models/schedule-model"
-import type { IStatus } from "@/models/status-model"
-import type { ITerminal } from "@/models/terminal-model"
+import type { IEditScheduleDialogProps } from "@/types/props/schedule"
+import { findAirportById } from "@/utils/entity-lookup"
 
 import { EditScheduleFormFieldsMain } from "./edit-schedule-form-fields-main"
 import { EditScheduleFormFieldsRest } from "./edit-schedule-form-fields-rest"
@@ -27,19 +23,7 @@ import {
   type EditScheduleFormValues,
 } from "./schedule-form-schema"
 
-type IProps = {
-  schedule: ISchedule
-  onClose: () => void
-  onConfirm: (data: ISchedule) => Promise<void>
-  airports: IAirport[]
-  companies: ICompany[]
-  existingSchedules: ISchedule[]
-  statuses: IStatus[]
-  terminals: ITerminal[]
-  aircrafts: IAircraft[]
-}
-
-export function EditScheduleDialogForm(props: IProps) {
+export function EditScheduleDialogForm(props: IEditScheduleDialogProps) {
   const {
     schedule,
     onClose,
@@ -80,7 +64,7 @@ export function EditScheduleDialogForm(props: IProps) {
 
   const onSubmit: SubmitHandler<EditScheduleFormValues> = async (data) => {
     const formattedStopovers = data.stopoverAirports.map((s) => {
-      const airport = airports.find((a) => a.id === s.airportId)
+      const airport = findAirportById(airports, s.airportId)
       return {
         code: airport?.code || "",
         name: airport?.name || "",

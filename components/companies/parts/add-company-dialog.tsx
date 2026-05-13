@@ -15,15 +15,11 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Field, FieldLabel, FieldError } from "@/components/ui/field"
+import { EMPTY_NAME_CODE_FORM_DEFAULTS } from "@/constants/form-defaults"
+import type { IAddCompanyDialogProps } from "@/types/props/companies"
 import { toast } from "sonner"
 
-type IProps = {
-  onClose: () => void
-  onConfirm: (name: string, code: string) => void
-  existingNames: string[]
-}
-
-export function AddCompanyDialog(props: IProps) {
+export function AddCompanyDialog(props: IAddCompanyDialogProps) {
   const { onClose, onConfirm, existingNames } = props
 
   const formSchema = z.object({
@@ -50,10 +46,7 @@ export function AddCompanyDialog(props: IProps) {
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: "",
-      code: "",
-    },
+    defaultValues: { ...EMPTY_NAME_CODE_FORM_DEFAULTS },
   })
 
   function onSubmit(data: z.infer<typeof formSchema>) {

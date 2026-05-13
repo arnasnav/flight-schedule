@@ -1,6 +1,6 @@
 "use client"
 
-import { Controller, type Control, type UseFieldArrayReturn } from "react-hook-form"
+import { Controller } from "react-hook-form"
 
 import { Button } from "@/components/ui/button"
 import { Field, FieldError, FieldLabel } from "@/components/ui/field"
@@ -11,17 +11,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import type { IAirport } from "@/models/airport-model"
 
-import type { AddScheduleFormValues } from "./schedule-form-schema"
+import type { IScheduleStopoverAirportsFieldsProps } from "@/types/props/schedule"
 
-type IProps = {
-  control: Control<AddScheduleFormValues>
-  stopovers: UseFieldArrayReturn<AddScheduleFormValues, "stopoverAirports">
-  airports: IAirport[]
-}
-
-export function ScheduleStopoverAirportsFields(props: IProps) {
+export function ScheduleStopoverAirportsFields(
+  props: IScheduleStopoverAirportsFieldsProps,
+) {
   const { control, stopovers, airports } = props
 
   return (

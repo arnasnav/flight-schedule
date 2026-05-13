@@ -3,14 +3,9 @@
 import type { ICompany } from "@/models/company-model"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
+import type { ICompanyListProps } from "@/types/props/companies"
 
-type IProps = {
-  companies: ICompany[]
-  onDelete: (id: string) => void
-  onEdit: (company: ICompany) => void
-}
-
-export function CompanyList(props: IProps) {
+export function CompanyList(props: ICompanyListProps) {
   const { companies, onDelete, onEdit } = props
   if (companies.length === 0) {
     return (

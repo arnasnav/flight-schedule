@@ -1,21 +1,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import type { IAirport } from "@/models/airport-model"
+import type { ITransitAirportsQueryProps } from "@/types/props/queries"
+
 import { AirportSelect } from "./airport-select"
 
-type TransitAirport = {
-  code: string
-  name: string
-}
-
-type IProps = {
-  airports: IAirport[]
-  destinationAirportId: string
-  onDestinationChange: (value: string) => void
-  transitAirports: TransitAirport[]
-  hasQueried: boolean
-}
-
-export function TransitAirportsQuery(props: IProps) {
+export function TransitAirportsQuery(props: ITransitAirportsQueryProps) {
   const {
     airports,
     destinationAirportId,
@@ -44,15 +32,15 @@ export function TransitAirportsQuery(props: IProps) {
               <table className="w-full text-sm">
                 <thead>
                   <tr className="bg-muted/50 text-left">
-                    <th className="px-3 py-2 font-medium">Oro uostas</th>
                     <th className="px-3 py-2 font-medium">Kodas</th>
+                    <th className="px-3 py-2 font-medium">Pavadinimas</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {transitAirports.map((airport) => (
-                    <tr key={airport.code} className="border-t">
-                      <td className="px-3 py-2">{airport.name}</td>
-                      <td className="px-3 py-2">{airport.code}</td>
+                  {transitAirports.map((row) => (
+                    <tr key={row.code} className="border-t">
+                      <td className="px-3 py-2">{row.code}</td>
+                      <td className="px-3 py-2">{row.name}</td>
                     </tr>
                   ))}
                 </tbody>

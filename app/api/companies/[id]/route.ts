@@ -1,23 +1,19 @@
 import { CompanyService } from "@/services/company-service"
 
-export async function PUT(
-  request: Request,
-  { params }: { params: Promise<{ id: string }> }
-) {
-  const { id } = await params
+export async function PUT(request: Request) {
   const body = await request.json()
 
   const companyService = new CompanyService()
-  await companyService.updateCompany({ ...body, id })
+  await companyService.updateCompany(body)
 
   return Response.json({ message: "Updated successfully" })
 }
 
 export async function DELETE(
   request: Request,
-  { params }: { params: Promise<{ id: string }> }
+  ctx: RouteContext<"/api/companies/[id]">,
 ) {
-  const { id } = await params
+  const { id } = await ctx.params
 
   const companyService = new CompanyService()
   await companyService.deleteCompany(id)

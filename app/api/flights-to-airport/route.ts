@@ -1,10 +1,10 @@
-import { NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
 import { Schedule } from "@/models/schedule-model"
 import { connectMongoose } from "@/utils/mongoose-client"
 
-export async function GET(request: Request) {
-  const searchQuery = new URL(request.url).searchParams
-  const airportId = searchQuery.get("airportId")
+export async function GET(request: NextRequest) {
+  const searchParams = request.nextUrl.searchParams
+  const airportId = searchParams.get("airportId")
 
   await connectMongoose()
   const flights = await Schedule.find({ arrivalAirportId: airportId }).sort({

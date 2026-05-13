@@ -2,25 +2,14 @@
 
 import { useState } from "react"
 import type { ISchedule } from "@/models/schedule-model"
-import type { IAirport } from "@/models/airport-model"
-import type { ICompany } from "@/models/company-model"
 import { ArrivalsSearch } from "./parts/arrivals-search"
 import { ArrivalsList } from "./parts/arrivals-list"
 import { putApi, getApi } from "@/utils/server-api"
 import { toast } from "sonner"
+import type { IArrivalsProps } from "@/types/props/arrivals"
 
-type IProps = {
-  schedules: ISchedule[]
-  airports: IAirport[]
-  companies: ICompany[]
-}
-
-export function Arrivals(props: IProps) {
-  const {
-    schedules: initialSchedules,
-    airports,
-    companies,
-  } = props
+export function Arrivals(props: IArrivalsProps) {
+  const { schedules: initialSchedules, airports, companies } = props
 
   const [schedules, setSchedules] = useState<ISchedule[]>(initialSchedules)
   const [searchQuery, setSearchQuery] = useState("")
@@ -32,7 +21,7 @@ export function Arrivals(props: IProps) {
 
   const handleToggleArrival = async (flight: ISchedule) => {
     await putApi(`/api/schedules/${flight.id}`, {
-      ...flight,
+      id: flight.id,
       hasArrived: !flight.hasArrived,
     })
 
