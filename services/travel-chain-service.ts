@@ -76,7 +76,7 @@ export async function buildTravelChain(
   )
   if (!leg2) throw new Error("No city bus")
 
-  let flight =
+  const flight =
     flights.find((f) => f.flightIata === iata) ||
     flights.find(
       (f) => f.departureTime.getTime() > leg2.arrivalTime.getTime() + 7200000

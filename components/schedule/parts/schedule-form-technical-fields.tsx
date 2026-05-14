@@ -14,7 +14,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import type { IStatus } from "@/models/status-model"
 
 import type { IScheduleFormTechnicalFieldsProps } from "@/types/props/schedule"
 import { findAircraftByName, findTerminalByName } from "@/utils/entity-lookup"

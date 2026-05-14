@@ -1,4 +1,3 @@
-import type { ICompany } from "@/models/company-model"
 import {
   Select,
   SelectContent,

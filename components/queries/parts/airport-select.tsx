@@ -1,4 +1,3 @@
-import type { IAirport } from "@/models/airport-model"
 import {
   Select,
   SelectContent,

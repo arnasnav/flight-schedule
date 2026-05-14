@@ -1,6 +1,5 @@
 "use client"
 
-import type { ICompany } from "@/models/company-model"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import type { ICompanyListProps } from "@/types/props/companies"

@@ -1,6 +1,5 @@
 "use client"
 
-import type { IAirport } from "@/models/airport-model"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import type { IAirportListProps } from "@/types/props/flights"

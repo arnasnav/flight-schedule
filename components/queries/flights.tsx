@@ -15,7 +15,11 @@ import { getApi } from "@/utils/server-api"
 import { AirportSelect } from "./parts/airport-select"
 import { CompanySelect } from "./parts/company-select"
 import { FlightsResultsTable } from "./parts/flights-results-table"
-import type { IFlightsProps } from "@/types/props/queries"
+import type {
+  IFlightsProps,
+  ITravelFlight,
+  ITravelResult,
+} from "@/types/props/queries"
 
 export enum FlightFilterType {
   ByCompany = "by-company",
@@ -32,9 +36,9 @@ export function Flights(props: IFlightsProps) {
   const [schedules, setSchedules] = useState<ISchedule[]>([])
   const [hasQueried, setHasQueried] = useState(false)
 
-  const [travelFlights, setTravelFlights] = useState<any[]>([])
+  const [travelFlights, setTravelFlights] = useState<ITravelFlight[]>([])
   const [selectedTravelFlight, setSelectedTravelFlight] = useState("")
-  const [travelResult, setTravelResult] = useState<any | null>(null)
+  const [travelResult, setTravelResult] = useState<ITravelResult | null>(null)
   const [travelError, setTravelError] = useState("")
   const [travelLoading, setTravelLoading] = useState(false)
 
@@ -104,11 +108,11 @@ export function Flights(props: IFlightsProps) {
   }
 
   const loadTravelFlights = async () => {
-    const data = await getApi<any[]>("/api/travel-chain?mode=flights")
+    const data = await getApi<ITravelFlight[]>("/api/travel-chain?mode=flights")
     const flights = data ?? []
     setTravelFlights(flights)
     if (flights.length > 0) {
-      setSelectedTravelFlight(flights[0].flightIata)
+      setSelectedTravelFlight(flights[0]!.flightIata)
     }
   }
 
@@ -121,22 +125,17 @@ export function Flights(props: IFlightsProps) {
       ? `?flightIata=${encodeURIComponent(selectedTravelFlight)}`
       : ""
 
-    try {
-      const response = await fetch(`/api/travel-chain${query}`)
-      const payload = await response.json()
+    const response = await fetch(`/api/travel-chain${query}`)
+    const payload = await response.json()
 
-      if (!response.ok) {
-        setTravelError(
-          payload?.message || "Nepavyko sudaryti kelionės grandinės."
-        )
-      } else {
-        setTravelResult(payload)
-      }
-    } catch (err) {
-      setTravelError("Įvyko tinklo klaida.")
-    } finally {
-      setTravelLoading(false)
+    if (!response.ok) {
+      setTravelError(
+        payload?.message || "Nepavyko sudaryti kelionės grandinės."
+      )
+    } else {
+      setTravelResult(payload)
     }
+    setTravelLoading(false)
   }
 
   function formatDate(date: string) {
@@ -237,7 +236,7 @@ export function Flights(props: IFlightsProps) {
               {travelFlights.length === 0 ? (
                 <option value="">Nėra skrydžių (paspauskite užkrauti)</option>
               ) : (
-                travelFlights.map((f: any) => (
+                travelFlights.map((f: ITravelFlight) => (
                   <option
                     key={`${f.flightIata}-${f.departureTime}`}
                     value={f.flightIata}

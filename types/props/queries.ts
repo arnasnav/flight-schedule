@@ -41,3 +41,28 @@ export type ITransitAirportsQueryProps = {
   transitAirports: ITransitAirport[]
   hasQueried: boolean
 }
+
+export type ITravelFlight = {
+  flightIata: string
+  departureTime: string
+  airline: string
+  destinationIata: string
+}
+
+export type ITravelLeg = {
+  fromStopName: string
+  toStopName: string
+  departureTime: string
+  arrivalTime: string
+}
+
+export type ITravelResult = {
+  intercityLeg: ITravelLeg
+  cityLeg: ITravelLeg
+  selectedFlight: {
+    flightIata: string
+    airline: string
+  }
+  reserveMinutes: number
+  statusLabel: string
+}
